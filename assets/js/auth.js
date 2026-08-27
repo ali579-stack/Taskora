@@ -22,14 +22,17 @@ function requireLogin() {
 }
 
 
-function signOut() {
-
+window.signOut = function signOut() {
   localStorage.removeItem("taskora_token");
   localStorage.removeItem("taskora_user");
 
-  window.location.href = "../login.html";
-}
+  sessionStorage.setItem(
+    "taskora_logout_message",
+    "You have been signed out successfully."
+  );
 
+  window.location.href = "../login.html";
+};
 
 function getCurrentUser() {
 
@@ -87,9 +90,11 @@ async function registerUser(name, email, password) {
     `${TASKORA_API_URL}/register`,
     {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify({
         name,
         email,
@@ -98,52 +103,230 @@ async function registerUser(name, email, password) {
     }
   );
 
-  const data = await response.json();
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
   if (!response.ok) {
-    throw new Error(
+    const error = new Error(
       data?.message || "Registration failed."
     );
+
+    error.status = response.status;
+    error.code = data?.code || "";
+
+    throw error;
   }
 
   return data;
 }
 
-const registerForm = document.getElementById("registerForm");
+
+const registerForm =
+  document.getElementById("registerForm");
+
 
 if (registerForm) {
-  registerForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+  registerForm.addEventListener(
+    "submit",
+    async (event) => {
 
-    try {
-      await registerUser(name, email, password);
+      event.preventDefault();
 
-      if (window.TaskoraPopup?.alert) {
-        TaskoraPopup.alert(
-          "Your account was created successfully. You can now sign in.",
-          "Account Created"
+
+      const name =
+        document
+          .getElementById("name")
+          .value
+          .trim();
+
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+
+      /*
+       * INVALID REGISTRATION DETAILS
+       */
+
+      if (!name || !email || !password) {
+
+        TaskoraPopup.error(
+          "Invalid registration details.",
+          4000
         );
-      } else {
-        alert("Your account was created successfully. You can now sign in.");
+
+        return;
       }
 
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 1200);
 
-    } catch (error) {
-      if (window.TaskoraPopup?.alert) {
-        TaskoraPopup.alert(
-          error.message || "Registration failed.",
-          "Registration Error"
+      /*
+       * PASSWORD VALIDATION
+       */
+
+      if (password.length < 8) {
+
+        TaskoraPopup.error(
+          "Password validation error: password must be at least 8 characters.",
+          4500
         );
-      } else {
-        alert(error.message || "Registration failed.");
+
+        return;
+      }
+
+
+      try {
+
+        await registerUser(
+          name,
+          email,
+          password
+        );
+
+
+        /*
+         * REGISTRATION SUCCESSFUL
+         */
+
+        TaskoraPopup.success(
+          "Registration successful.",
+          2200
+        );
+
+
+        /*
+         * Preserve existing registration flow.
+         * User still goes to login.html.
+         */
+
+        setTimeout(() => {
+
+          window.location.href =
+            "login.html";
+
+        }, 1200);
+
+
+      } catch (error) {
+
+        console.error(
+          "Registration error:",
+          error
+        );
+
+
+        const message =
+          String(
+            error?.message || ""
+          ).toLowerCase();
+
+
+        /*
+         * EMAIL ALREADY EXISTS
+         */
+
+        if (
+          error?.status === 409 ||
+          message.includes("already exists") ||
+          message.includes("email exists") ||
+          message.includes("email already")
+        ) {
+
+          TaskoraPopup.error(
+            "Email already exists.",
+            4500
+          );
+
+          return;
+        }
+
+
+        /*
+         * PASSWORD VALIDATION ERRORS
+         */
+
+        if (
+          message.includes("password") &&
+          (
+            message.includes("valid") ||
+            message.includes("weak") ||
+            message.includes("length") ||
+            message.includes("character") ||
+            message.includes("required")
+          )
+        ) {
+
+          TaskoraPopup.error(
+            error.message ||
+            "Password validation error.",
+            4500
+          );
+
+          return;
+        }
+
+
+        /*
+         * INVALID REGISTRATION DETAILS
+         */
+
+        if (
+          error?.status === 400 ||
+          error?.status === 422
+        ) {
+
+          TaskoraPopup.error(
+            error.message ||
+            "Invalid registration details.",
+            4500
+          );
+
+          return;
+        }
+
+
+        /*
+         * SERVER ERROR
+         */
+
+        if (
+          error?.status >= 500 ||
+          !navigator.onLine
+        ) {
+
+          TaskoraPopup.error(
+            "Server error. Please try again later.",
+            5000
+          );
+
+          return;
+        }
+
+
+        /*
+         * FALLBACK
+         */
+
+        TaskoraPopup.error(
+          error.message ||
+          "Server error. Please try again later.",
+          5000
+        );
       }
     }
-  });
+  );
 }

@@ -89,6 +89,20 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/login.js"></script>
+<script>
+(function () {
+  const message =
+    sessionStorage.getItem("taskora_logout_message");
+
+  if (message) {
+    sessionStorage.removeItem("taskora_logout_message");
+
+    if (window.TaskoraPopup) {
+      TaskoraPopup.success(message);
+    }
+  }
+})();
+</script>
 <script src="assets/js/password-toggle.js"></script>
 </body>
 </html>

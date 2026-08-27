@@ -2255,11 +2255,11 @@ small {
   border-radius: 18px;
   background: var(--surface);
   color: var(--text);
-  box-shadow: 0 24px 70px rgba(15,23,42,.22);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
 }
 
 .taskora-dialog::backdrop {
-  background: rgba(15,23,42,.48);
+  background: rgba(15, 23, 42, .48);
   backdrop-filter: blur(3px);
 }
 
@@ -2312,43 +2312,175 @@ small {
   background: var(--primary-dark);
 }
 
-.taskora-toast {
+
+/* =========================================================
+   TASKORA TOASTS
+   ========================================================= */
+
+.taskora-toast-container {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
   z-index: 100000;
-  width: min(380px, calc(100vw - 40px));
-  padding: 14px 16px;
+  width: min(390px, calc(100vw - 40px));
+
   display: flex;
-  align-items: center;
-  gap: 11px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 18px 45px rgba(15,23,42,.16);
-  animation: taskoraToastIn .2s ease-out;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+
+  pointer-events: none;
 }
 
-.taskora-toast.success { border-left: 4px solid var(--success); }
-.taskora-toast.error { border-left: 4px solid var(--danger); }
-.taskora-toast.warning { border-left: 4px solid var(--warning); }
+.taskora-toast {
+  position: relative;
 
-@keyframes taskoraToastIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  display: grid;
+  grid-template-columns: 30px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  padding: 12px 12px 12px 13px;
+
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 14px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, .16),
+    0 3px 10px rgba(15, 23, 42, .08);
+
+  opacity: 0;
+  transform: translate3d(24px, 8px, 0);
+
+  transition:
+    opacity .22s ease,
+    transform .22s ease;
+
+  pointer-events: auto;
+
+  overflow: hidden;
+}
+
+.taskora-toast.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.taskora-toast.is-removing {
+  opacity: 0;
+  transform: translate3d(24px, 8px, 0);
+}
+
+.taskora-toast.success {
+  border-left-color: var(--success);
+}
+
+.taskora-toast.error {
+  border-left-color: var(--danger);
+}
+
+.taskora-toast.warning {
+  border-left-color: var(--warning);
+}
+
+.taskora-toast.info {
+  border-left-color: var(--primary);
+}
+
+.taskora-toast-icon {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--surface-soft);
+  color: var(--primary);
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.taskora-toast.success .taskora-toast-icon {
+  color: var(--success);
+}
+
+.taskora-toast.error .taskora-toast-icon {
+  color: var(--danger);
+}
+
+.taskora-toast.warning .taskora-toast-icon {
+  color: var(--warning);
+}
+
+.taskora-toast-message {
+  min-width: 0;
+
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+}
+
+.taskora-toast-close {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--muted);
+
+  font-size: 21px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.taskora-toast-close:hover {
+  background: var(--surface-soft);
+  color: var(--text);
 }
 
 html[data-theme="dark"] .taskora-dialog::backdrop {
-  background: rgba(0,0,0,.62);
+  background: rgba(0, 0, 0, .62);
 }
 
 html[data-theme="dark"] .taskora-dialog,
 html[data-theme="dark"] .taskora-toast {
-  box-shadow: 0 24px 70px rgba(0,0,0,.45);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, .45),
+    0 3px 12px rgba(0, 0, 0, .25);
 }
 
 @media (max-width: 600px) {
+  .taskora-dialog {
+    width: calc(100vw - 28px);
+    max-width: none;
+    border-radius: 16px;
+  }
+
   .taskora-dialog-inner {
     padding: 20px;
   }
@@ -2361,10 +2493,25 @@ html[data-theme="dark"] .taskora-toast {
     width: 100%;
   }
 
+  .taskora-toast-container {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+  }
+
   .taskora-toast {
-    right: 15px;
-    bottom: 15px;
-    width: calc(100vw - 30px);
+    min-height: 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taskora-toast {
+    transition: none;
+    transform: none;
+  }
+
+  .taskora-toast.is-visible {
+    transform: none;
   }
 }
 
@@ -2372,6 +2519,7 @@ html[data-theme="dark"] .taskora-toast {
 /* =========================================================
    TASKORA MODERN UI
 ========================================================= */
+
 
 .dashboard-card,
 .stat-card,
@@ -4031,4 +4179,68 @@ html[data-theme="dark"] #withdrawMethod option[value="crypto"] {
   [dir="rtl"] .sidebar.active {
     transform: translateX(0);
   }
+}
+
+/* TASKORA — readable bottom-right notification */
+.taskora-toast {
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.45;
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.taskora-toast-title {
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--text);
+}
+
+.taskora-toast-message {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.taskora-toast-hide {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (max-width: 600px) {
+  .taskora-toast {
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    width: auto;
+  }
+}
+
+/* =========================================================
+   TASKORA TOAST ENHANCEMENTS
+   ========================================================= */
+
+.taskora-toast {
+  transition:
+    opacity .22s ease,
+    transform .22s ease;
+}
+
+.taskora-toast.is-hiding {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.taskora-toast.info {
+  border-left: 4px solid var(--primary);
+}
+
+.taskora-toast.success {
+  border-left: 4px solid var(--success);
+}
+
+.taskora-toast.error {
+  border-left: 4px solid var(--danger);
+}
+
+.taskora-toast.warning {
+  border-left: 4px solid var(--warning);
 }
