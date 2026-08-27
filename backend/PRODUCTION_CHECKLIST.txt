@@ -12,9 +12,9 @@ TASKORA PRODUCTION CHECKLIST
 [x] PostgreSQL settings verified
 
 TODO:
-[ ] Add production DATABASE_URL
-[ ] Add production JWT_SECRET
-[ ] Set FRONTEND_URL to real domain
-[ ] Enable HTTPS
+[x] Add production DATABASE_URL (Render)
+[x] Add production JWT_SECRET (Render)
+[x] FRONTEND_URL optional when using Render URL / same-origin frontend
+[x] HTTPS provided by Render
 [ ] Deploy backend
 [ ] Connect domain

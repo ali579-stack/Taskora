@@ -4,7 +4,7 @@
 
 "use strict";
 
-const TASKORA_API_URL = "http://127.0.0.1:3000/api";
+const TASKORA_API_URL = "/api";
 
 const TASKORA_CURRENCY = "EUR";
 const TASKORA_CURRENCY_SYMBOL = "€";
