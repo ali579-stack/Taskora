@@ -2,15 +2,11 @@
 <html lang="en">
 <head>
   <script src="../assets/js/theme.js"></script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
   <title>Profile — TASKORA</title>
-
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/profile.css">
-
   <script src="../assets/js/popups.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="../assets/js/icons.js"></script>
@@ -20,86 +16,52 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <a class="logo" href="../index.html">
-        TASK<span>ORA</span>
-      </a>
-
-      <button
-        id="sidebarClose"
-        class="sidebar-close"
-        type="button"
-        aria-label="Close menu"
-      >×</button>
+      <a class="logo" href="../index.html">TASK<span>ORA</span></a>
+      <button id="sidebarClose" class="sidebar-close" type="button"
+        aria-label="Close menu">×</button>
     </div>
 
     <nav class="sidebar-nav">
-
       <a class="nav-item" href="dashboard.html#dashboard">
-        <span><i data-lucide="house"></i></span>
-        <span>Dashboard</span>
+        <span><i data-lucide="house"></i></span><span>Dashboard</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#submissions">
-        <span><i data-lucide="clipboard-pen"></i></span>
-        <span>My Submissions</span>
+        <span><i data-lucide="clipboard-pen"></i></span><span>My Submissions</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#results">
-        <span><i data-lucide="chart-column"></i></span>
-        <span>Results</span>
+        <span><i data-lucide="chart-column"></i></span><span>Results</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#earnings">
-        <span><i data-lucide="wallet"></i></span>
-        <span>Earnings</span>
+        <span><i data-lucide="wallet"></i></span><span>Earnings</span>
       </a>
-
       <a class="nav-item" href="tasks.html">
-        <span><i data-lucide="clipboard-list"></i></span>
-        <span>Find Tasks</span>
+        <span><i data-lucide="clipboard-list"></i></span><span>Find Tasks</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#withdrawals">
-        <span><i data-lucide="credit-card"></i></span>
-        <span>Withdrawals</span>
+        <span><i data-lucide="credit-card"></i></span><span>Withdrawals</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#orders">
-        <span><i data-lucide="shopping-cart"></i></span>
-        <span>Orders</span>
+        <span><i data-lucide="shopping-cart"></i></span><span>Orders</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#notifications">
         <span><i data-lucide="bell"></i></span>
         <span>Notifications</span>
         <span class="notification-badge">3</span>
       </a>
-
       <a class="nav-item active" href="profile.html">
-        <span><i data-lucide="user"></i></span>
-        <span>Profile</span>
+        <span><i data-lucide="user"></i></span><span>Profile</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#faq">
-        <span><i data-lucide="circle-help"></i></span>
-        <span>FAQ</span>
+        <span><i data-lucide="circle-help"></i></span><span>FAQ</span>
       </a>
-
       <a class="nav-item" href="dashboard.html#support">
-        <span><i data-lucide="life-buoy"></i></span>
-        <span>Support</span>
+        <span><i data-lucide="life-buoy"></i></span><span>Support</span>
       </a>
-
     </nav>
 
     <div class="sidebar-footer">
-      <button
-        class="nav-item signout-button"
-        type="button"
-        onclick="signOut()"
-      >
-        <span><i data-lucide="log-out"></i></span>
-        <span>Sign Out</span>
+      <button class="nav-item signout-button" type="button" onclick="signOut()">
+        <span><i data-lucide="log-out"></i></span><span>Sign Out</span>
       </button>
     </div>
   </aside>
@@ -108,38 +70,20 @@
 
   <header class="dashboard-header profile-topbar">
     <div class="header-left">
-
-      <button
-        id="menuButton"
-        class="menu-button"
-        type="button"
-        aria-label="Open menu"
-      >
+      <button id="menuButton" class="menu-button" type="button"
+        aria-label="Open menu">
         <i data-lucide="menu"></i>
       </button>
-
-      <div class="header-page-title">
-        <strong>Profile</strong>
-      </div>
-
+      <div class="header-page-title"><strong>Profile</strong></div>
     </div>
 
     <div class="header-actions">
-
-      <button
-        class="theme-toggle"
-        id="themeToggle"
-        type="button"
-        aria-label="Toggle theme"
-      >
+      <button class="theme-toggle" id="themeToggle" type="button"
+        aria-label="Toggle theme">
         <i data-lucide="moon"></i>
       </button>
 
-      <select
-        id="languageSelect"
-        class="language-select"
-        aria-label="Language"
-      >
+      <select id="languageSelect" class="language-select" aria-label="Language">
         <option value="en">EN</option>
         <option value="ur">اردو</option>
         <option value="ar">العربية</option>
@@ -147,63 +91,53 @@
         <option value="fr">FR</option>
       </select>
 
-      <button
-        class="header-icon"
-        type="button"
-        aria-label="Notifications"
-      >
+      <button class="header-icon" type="button" aria-label="Notifications">
         <i data-lucide="bell"></i>
         <span class="header-notification-dot"></span>
       </button>
-
     </div>
   </header>
 
   <main class="profile-wrap">
 
-    <a class="back" href="dashboard.html">
-      ← Back to Dashboard
-    </a>
+    <a class="back" href="dashboard.html">← Back to Dashboard</a>
 
     <section class="profile-card">
-
       <div class="profile-head">
-
-        <div class="avatar-big" id="profileAvatar">
-          W
-        </div>
+        <div class="avatar-big" id="profileAvatar">W</div>
 
         <div>
           <h1 id="profileName">Worker</h1>
-
-          <div class="muted" id="profileRole">
-            Worker Account
-          </div>
+          <div class="muted" id="profileRole">Worker Account</div>
         </div>
-
       </div>
 
       <div class="profile-grid">
 
         <div class="field">
-          <label>FULL NAME</label>
-          <strong id="profileFullName">
-            Loading...
-          </strong>
+          <label for="profileFullNameInput">FULL NAME</label>
+          <input
+            id="profileFullNameInput"
+            type="text"
+            autocomplete="name"
+            placeholder="Enter your full name"
+          >
         </div>
 
         <div class="field">
-          <label>EMAIL</label>
-          <strong id="profileEmail">
-            Loading...
-          </strong>
+          <label for="profileEmailInput">EMAIL</label>
+          <input
+            id="profileEmailInput"
+            type="email"
+            autocomplete="email"
+            placeholder="Enter your email"
+          >
         </div>
 
         <div class="field">
           <label>ACCOUNT ROLE</label>
-          <strong id="profileRoleValue">
-            Loading...
-          </strong>
+          <strong id="profileRoleValue">Worker</strong>
+          <span class="field-lock">🔒 Locked</span>
         </div>
 
         <div class="field">
@@ -212,31 +146,32 @@
             <span class="status-dot"></span>
             Active
           </strong>
+          <span class="field-lock">🔒 Locked</span>
         </div>
 
         <div class="field">
           <label>MEMBER SINCE</label>
-          <strong id="profileJoined">
-            Loading...
-          </strong>
+          <strong id="profileJoined">—</strong>
+          <span class="field-lock">🔒 Locked</span>
         </div>
 
         <div class="field">
           <label>USER ID</label>
-          <strong id="profileUserId">
-            Loading...
-          </strong>
+          <strong id="profileUserId">—</strong>
+          <span class="field-lock">🔒 Locked</span>
         </div>
 
       </div>
 
+      <div class="profile-save-row">
+        <button id="saveProfileButton" type="button">
+          Save Profile
+        </button>
+        <span id="profileSaveMessage" class="muted"></span>
+      </div>
     </section>
 
-    <section
-      class="profile-card"
-      id="profile-linked-accounts"
-    >
-
+    <section class="profile-card" id="profile-linked-accounts">
       <h2>Linked Social Accounts</h2>
 
       <p class="muted">
@@ -250,15 +185,190 @@
         class="muted"
         style="margin-top:16px"
       ></div>
-
     </section>
 
   </main>
+
+  <style>
+    .field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px 12px;
+      border: 1px solid var(--profile-border);
+      border-radius: 10px;
+      background: var(--profile-card);
+      color: var(--profile-text);
+      font: inherit;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+
+    .field-lock {
+      display: block;
+      margin-top: 7px;
+      color: var(--profile-muted);
+      font-size: 11px;
+    }
+
+    .profile-save-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    #saveProfileButton {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 18px;
+      background: #4f46e5;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    #saveProfileButton:hover {
+      background: #4338ca;
+    }
+  </style>
 
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/profile.js"></script>
   <script src="../assets/js/sidebar.js"></script>
+
+  <script>
+    (() => {
+      const KEY = "taskora_profile_local";
+
+      const nameInput = document.getElementById("profileFullNameInput");
+      const emailInput = document.getElementById("profileEmailInput");
+      const nameTitle = document.getElementById("profileName");
+      const avatar = document.getElementById("profileAvatar");
+      const saveButton = document.getElementById("saveProfileButton");
+      const message = document.getElementById("profileSaveMessage");
+
+      function getSaved() {
+        try {
+          const value = JSON.parse(localStorage.getItem(KEY) || "{}");
+          return value && typeof value === "object" ? value : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function getUser() {
+        for (const key of ["taskora_user", "user"]) {
+          try {
+            const value = JSON.parse(localStorage.getItem(key) || "null");
+            if (value && typeof value === "object") return value;
+          } catch {}
+        }
+        return {};
+      }
+
+      function applyName(name) {
+        const clean = String(name || "").trim() || "Worker";
+        nameTitle.textContent = clean;
+        avatar.textContent = clean.charAt(0).toUpperCase();
+      }
+
+      const user = getUser();
+      const saved = getSaved();
+
+      const initialName =
+        saved.name ||
+        user.name ||
+        "";
+
+      const initialEmail =
+        saved.email ||
+        user.email ||
+        "";
+
+      nameInput.value = initialName;
+      emailInput.value = initialEmail;
+      applyName(initialName);
+
+      if (user.role) {
+        document.getElementById("profileRoleValue").textContent =
+          String(user.role).replace(/_/g, " ");
+      }
+
+      if (user.id) {
+        document.getElementById("profileUserId").textContent = "#" + user.id;
+      }
+
+      if (user.created_at) {
+        document.getElementById("profileJoined").textContent =
+          new Date(user.created_at).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          });
+      } else if (saved.created_at) {
+        document.getElementById("profileJoined").textContent =
+          new Date(saved.created_at).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          });
+      }
+
+      nameInput.addEventListener("input", () => {
+        applyName(nameInput.value);
+      });
+
+      saveButton.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+
+        if (!name) {
+          message.textContent = "Please enter your full name.";
+          nameInput.focus();
+          return;
+        }
+
+        if (!email) {
+          message.textContent = "Please enter your email.";
+          emailInput.focus();
+          return;
+        }
+
+        const current = getSaved();
+
+        const data = {
+          ...current,
+          name,
+          email,
+          created_at:
+            current.created_at ||
+            user.created_at ||
+            new Date().toISOString()
+        };
+
+        localStorage.setItem(KEY, JSON.stringify(data));
+
+        applyName(name);
+
+        if (!document.getElementById("profileJoined").textContent ||
+            document.getElementById("profileJoined").textContent === "—") {
+          document.getElementById("profileJoined").textContent =
+            new Date(data.created_at).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            });
+        }
+
+        message.textContent = "Profile saved.";
+      });
+    })();
+  </script>
 
 </body>
 </html>
