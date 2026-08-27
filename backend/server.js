@@ -69,7 +69,13 @@ app.use(
 );
 
 app.use(express.json());
-app.use(express.static(FRONTEND_DIR));
+app.use(express.static(FRONTEND_DIR, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    }
+  }
+}));
 app.use("/api", authRouter);
 app.use("/api/submissions", submissionsRouter);
 app.use("/api/admin", adminRouter);
