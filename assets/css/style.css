@@ -557,7 +557,11 @@ button {
 }
 
 .menu-button {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
   border: 0;
   color: var(--text);
   background: transparent;
