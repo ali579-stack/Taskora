@@ -12,6 +12,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pg from "pg";
 import jwt from "jsonwebtoken";
+import { requireAuth } from "./middleware/auth.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -146,66 +147,6 @@ app.get("/api/health", async (req, res) => {
    authentication system if you already have one.
 */
 
-async function requireAuth(req, res, next) {
-  try {
-    const authorization =
-      String(req.headers.authorization || "").trim();
-
-    if (!authorization.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required."
-      });
-    }
-
-    const token = authorization.slice(7).trim();
-
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication token is missing."
-      });
-    }
-
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not configured.");
-
-      return res.status(500).json({
-        success: false,
-        message: "Authentication configuration error."
-      });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
-
-    const userId = Number(decoded.id);
-
-    if (!Number.isInteger(userId) || userId <= 0) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid authentication token."
-      });
-    }
-
-    req.user = {
-      id: userId,
-      role: decoded.role || "user"
-    };
-
-    next();
-
-  } catch (error) {
-    console.error("JWT authentication error:", error.message);
-
-    return res.status(401).json({
-      success: false,
-      message: "Invalid or expired authentication token."
-    });
-  }
-}
 
 
 /* =========================================================

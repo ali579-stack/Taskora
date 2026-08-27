@@ -22,27 +22,6 @@ router.get(
 
     try {
 
-      // Workers must have at least one linked social account
-      // before they can access available tasks.
-      const accountResult = await pool.query(
-        `
-        SELECT COUNT(*)::int AS count
-        FROM social_accounts
-        WHERE user_id = $1
-        `,
-        [req.user.id]
-      );
-
-      const linkedAccounts = Number(accountResult.rows[0].count || 0);
-
-      if (linkedAccounts === 0) {
-        return res.status(403).json({
-          success: false,
-          code: "LINKED_ACCOUNT_REQUIRED",
-          message: "Link at least one social account before accessing available tasks."
-        });
-      }
-
       const result = await pool.query(`
         SELECT
           id,
