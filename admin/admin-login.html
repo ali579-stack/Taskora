@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="../assets/js/theme.js"></script>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Login — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+  <script src="../assets/js/popups.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/icons.js"></script>
+</head>
+
+
+<body class="auth-page">
+
+<button
+  class="theme-toggle"
+  id="themeToggle"
+  type="button"
+  aria-label="Toggle theme"
+  title="Toggle theme"
+>
+  <i data-lucide="moon"></i>
+</button>
+
+
+
+
+  <main class="auth-container">
+
+    <div class="auth-card">
+
+
+      <!-- LOGO -->
+
+      <a
+        href="../index.html"
+        class="logo auth-logo"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+
+      <span class="eyebrow">
+        ADMIN AREA
+      </span>
+
+
+      <h1>
+        Admin Login
+      </h1>
+
+
+      <p class="auth-subtitle">
+        Sign in to manage TASKORA.
+      </p>
+
+
+
+      <!-- LOGIN FORM -->
+
+      <form
+        id="adminLoginForm"
+        class="auth-form"
+      >
+
+
+        <div class="form-group">
+
+          <label for="adminEmail">
+            Email
+          </label>
+
+          <input
+            id="adminEmail"
+            name="email"
+            type="email"
+            placeholder="admin@example.com"
+            autocomplete="username"
+            required
+          >
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label for="adminPassword">
+            Password
+          </label>
+
+          <div class="password-field">
+            <input
+              id="adminPassword"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              data-password-toggle="adminPassword"
+              aria-label="Show password"
+              aria-pressed="false"
+            ><i data-lucide="eye"></i></button>
+          </div>
+
+        </div>
+
+
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-full"
+        >
+          Sign In
+        </button>
+
+
+        <div
+          id="adminLoginMessage"
+          class="form-message"
+          hidden
+          role="alert"
+        ></div>
+
+
+      </form>
+
+
+      <div class="auth-footer">
+
+        <a href="../index.html">
+          ← Back to TASKORA
+        </a>
+
+      </div>
+
+
+    </div>
+
+  </main>
+
+
+
+  <!-- CONFIG -->
+
+  <script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+
+<script>
+(function () {
+  const form = document.getElementById("adminLoginForm");
+  const message = document.getElementById("adminLoginMessage");
+
+  if (!form) {
+    console.error("Admin login form not found");
+    return;
+  }
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value;
+
+    message.hidden = false;
+    message.textContent = "Signing in...";
+
+    try {
+      const response = await fetch(
+        TASKORA_API_URL + "/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, password })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Login failed.");
+      }
+
+      if (!data.user || data.user.role !== "admin") {
+        localStorage.removeItem("taskora_token");
+        localStorage.removeItem("taskora_user");
+        throw new Error("Administrator access required.");
+      }
+
+      localStorage.setItem("taskora_token", data.token);
+      localStorage.setItem(
+        "taskora_user",
+        JSON.stringify(data.user)
+      );
+
+      window.location.href = "admin.html";
+
+    } catch (error) {
+      console.error("Admin login error:", error);
+      message.hidden = false;
+      message.textContent =
+        error.message || "Unable to sign in.";
+    }
+  });
+})();
+</script>
+
+<script src="../assets/js/password-toggle.js"></script>
+</body>
+</html>

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+<script src="../assets/js/theme.js"></script>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Worker Dashboard — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+
+
+<style id="taskora-withdrawal-beautify">
+.withdrawal-card{
+  background:linear-gradient(145deg,#ffffff,#f8fbff);
+  border:1px solid #e7edf5;
+  border-radius:20px;
+  padding:24px;
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+}
+.withdrawal-card h2,.withdrawal-card h3{margin-bottom:8px}
+.withdrawal-card .withdraw-subtitle{
+  color:#64748b;margin-bottom:22px;font-size:14px
+}
+.withdrawal-balance{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 20px;margin-bottom:20px;border-radius:16px;
+  background:linear-gradient(135deg,#eff6ff,#f0fdf4);
+  border:1px solid #dbeafe
+}
+.withdrawal-balance span{color:#64748b;font-size:13px}
+.withdrawal-balance strong{display:block;font-size:25px;color:#0f172a;margin-top:4px}
+.withdrawal-form{display:grid;gap:14px}
+.withdrawal-form input,.withdrawal-form select{
+  width:100%;padding:13px 14px;border:1px solid #dbe3ee;
+  border-radius:12px;background:#fff;font-size:14px;outline:none;
+  transition:.2s
+}
+.withdrawal-form input:focus,.withdrawal-form select:focus{
+  border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12)
+}
+.withdrawal-history{
+  margin-top:22px;border-top:1px solid #edf1f6;padding-top:18px
+}
+.withdrawal-status{
+  display:inline-flex;padding:5px 10px;border-radius:999px;
+  font-size:12px;font-weight:600
+}
+.withdrawal-status.pending{background:#fff7ed;color:#c2410c}
+.withdrawal-status.approved{background:#ecfdf5;color:#047857}
+.withdrawal-status.rejected{background:#fef2f2;color:#b91c1c}
+
+/* =====================================================
+   LINKED ACCOUNT SLOT UI
+===================================================== */
+
+.linked-accounts-groups {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.linked-account-group {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.linked-account-group-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.linked-account-group-header h3 {
+  margin: 5px 0 0;
+}
+
+.linked-account-group-header > strong {
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.linked-account-group > .btn {
+  margin-bottom: 14px;
+}
+
+.linked-account-slots {
+  display: grid;
+  gap: 10px;
+}
+
+.linked-account-slot {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.linked-account-slot-empty {
+  color: #8a8f98;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.linked-account-slot-filled {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.linked-account-slot-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.linked-account-slot-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linked-account-slot .status {
+  flex-shrink: 0;
+}
+
+.linked-account-slot .btn {
+  flex-shrink: 0;
+}
+
+.linked-account-group .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+
+  .linked-account-group {
+    padding: 14px;
+  }
+
+  .linked-account-slot {
+    align-items: flex-start;
+  }
+
+  .linked-account-slot-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+}
+
+</style>
+
+
+
+
+
+<style>
+/* ===== Available Tasks ===== */
+#tasks .section-toolbar {
+  margin-bottom: 22px;
+}
+
+#tasks .section-toolbar h2 {
+  margin-bottom: 5px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+#tasks .section-toolbar p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+#tasks .task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 18px;
+}
+
+#tasks .task-card {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #e8edf5;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+#tasks .task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, .10);
+}
+
+#tasks .task-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+#tasks .task-category {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#tasks .task-reward {
+  color: #059669;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+#tasks .task-card h3 {
+  margin: 0 0 9px;
+  color: #0f172a;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+#tasks .task-card p {
+  min-height: 44px;
+  margin: 0 0 17px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#tasks .task-meta {
+  display: flex;
+  gap: 14px;
+  padding: 11px 0;
+  margin-bottom: 15px;
+  border-top: 1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
+  color: #64748b;
+  font-size: 12px;
+}
+
+#tasks .btn-full {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  #tasks .task-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #tasks .task-card {
+    padding: 18px;
+  }
+}
+</style>
+
+
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/icons.js"></script>
+
+<style id="withdrawal-box-fix">
+/* ===== WITHDRAWAL BOX FIX ===== */
+
+#withdrawals,
+#withdrawals * {
+  box-sizing: border-box;
+}
+
+#withdrawals .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+#withdrawals .stat-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 18px;
+}
+
+#withdrawals .stat-card > div:last-child {
+  min-width: 0;
+  flex: 1;
+}
+
+#withdrawals .stat-card strong,
+#withdrawals .stat-card span {
+  overflow-wrap: anywhere;
+}
+
+#withdrawals .dashboard-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 22px;
+  border-radius: 18px;
+}
+
+#withdrawals #withdrawalForm {
+  width: 100%;
+  max-width: 100%;
+}
+
+#withdrawals .form-group {
+  width: 100%;
+  min-width: 0;
+}
+
+#withdrawals input,
+#withdrawals select,
+#withdrawals button {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#withdrawals .table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+#withdrawals .data-table {
+  min-width: 650px;
+}
+
+@media (max-width: 700px) {
+  #withdrawals .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #withdrawals .dashboard-card {
+    padding: 17px;
+  }
+}
+</style>
+
+
+<style id="beautiful-withdraw-bars">
+#withdrawals .form-group {
+  margin-bottom: 18px;
+}
+
+#withdrawals label {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#withdrawals input,
+#withdrawals select {
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  border: 1px solid #dbe3ef;
+  border-radius: 13px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  box-shadow: inset 0 1px 2px rgba(15,23,42,.03);
+  transition: border-color .2s ease, box-shadow .2s ease,
+              background .2s ease, transform .2s ease;
+}
+
+#withdrawals input:hover,
+#withdrawals select:hover {
+  border-color: #c7d2fe;
+  background: #fff;
+}
+
+#withdrawals input:focus,
+#withdrawals select:focus {
+  border-color: #6366f1;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(99,102,241,.10);
+  transform: translateY(-1px);
+}
+
+#withdrawals input::placeholder {
+  color: #94a3b8;
+}
+
+#withdrawals select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 42px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #64748b 50%),
+    linear-gradient(135deg, #64748b 50%, transparent 50%);
+  background-position:
+    calc(100% - 19px) 21px,
+    calc(100% - 14px) 21px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+#withdrawals #withdrawalForm button[type="submit"] {
+  height: 50px;
+  border-radius: 13px;
+  font-weight: 800;
+  margin-top: 5px;
+  box-shadow: 0 8px 20px rgba(79,70,229,.20);
+}
+
+@media (max-width: 700px) {
+  #withdrawals input,
+  #withdrawals select,
+  #withdrawals #withdrawalForm button[type="submit"] {
+    height: 48px;
+  }
+}
+</style>
+
+
+<style id="withdrawal-theme-text">
+/* ===== THEME-AWARE WITHDRAWAL TEXT ===== */
+
+#withdrawals h2,
+#withdrawals h3,
+#withdrawals strong {
+  color: var(--text);
+}
+
+#withdrawals p,
+#withdrawals .muted,
+#withdrawals .withdraw-subtitle {
+  color: var(--muted);
+}
+
+#withdrawals label {
+  color: var(--text-secondary);
+}
+
+#withdrawals input,
+#withdrawals select {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+#withdrawals input::placeholder {
+  color: var(--muted);
+}
+
+#withdrawals input:hover,
+#withdrawals select:hover {
+  background: var(--surface-soft);
+  border-color: var(--primary);
+}
+
+#withdrawals input:focus,
+#withdrawals select:focus {
+  background: var(--surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99,102,241,.12);
+}
+
+html[data-theme="dark"] #withdrawals .dashboard-card,
+html[data-theme="dark"] #withdrawals .stat-card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="dark"] #withdrawals input,
+html[data-theme="dark"] #withdrawals select {
+  background: #172033;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] #withdrawals input:hover,
+html[data-theme="dark"] #withdrawals select:hover {
+  background: #1c2940;
+}
+
+html[data-theme="dark"] #withdrawals .withdrawal-balance {
+  background: linear-gradient(
+    135deg,
+    rgba(59,130,246,.12),
+    rgba(34,197,94,.10)
+  );
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] #withdrawals select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+    linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+}
+</style>
+
+</head>
+<body class="dashboard-page">
+
+<main class="main-content">
+  <div class="dashboard-content">
+      <!-- =================================================
+           WITHDRAWALS
+      ================================================== -->
+
+      <section
+        id="withdrawals"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              PAYMENTS
+            </span>
+
+            <h2>Withdrawals</h2>
+<p class="withdraw-subtitle">Withdraw your available earnings securely and track every request.</p>
+
+            <p>
+              Request a withdrawal and track your payment status.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon blue"><i data-lucide="wallet"></i></div>
+
+            <div>
+
+              <span>Available to Withdraw</span>
+
+              <strong id="withdrawAvailableBalance">
+                $0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon orange">
+              ⏳
+            </div>
+
+            <div>
+
+              <span>Minimum Withdrawal</span>
+
+              <strong id="minimumWithdrawalDisplay">$5.00</strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>Request Withdrawal</h3>
+
+
+          <form id="withdrawalForm">
+
+            <div class="form-group">
+
+              <label for="withdrawAmount">
+                Amount
+              </label>
+
+              <input
+                id="withdrawAmount"
+                name="amount"
+                type="number"
+                min="5"
+                step="0.01"
+                placeholder="5.00"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="withdrawMethod">
+                Withdrawal Method
+              </label>
+
+              <select
+                id="withdrawMethod"
+                name="method"
+                required
+              >
+                <option value="" selected disabled>
+                  Select payment method
+                </option>
+
+                <option value="">
+                  Select method
+                </option>
+
+                <option value="bank">
+                  Bank Transfer
+                </option>
+                <option value="crypto">₮ USDT (Tether)</option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="withdrawAccount">
+                Payment Account
+              </label>
+
+              <input
+                id="withdrawAccount"
+                name="account"
+                type="text"
+                placeholder="Enter your payment account"
+                autocomplete="off"
+                required
+              >
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Request Withdrawal
+            </button>
+
+
+            <div
+              id="withdrawalMessage"
+              hidden
+              style="margin-top:15px;"
+            ></div>
+
+          </form>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>Withdrawal History</h3>
+
+
+          <div class="table-wrapper">
+
+            <table class="data-table">
+
+              <thead>
+
+                <tr>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Account</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+
+              </thead>
+
+
+              <tbody id="withdrawalsTable">
+
+                <tr>
+
+                  <td colspan="5">
+                    Loading withdrawals...
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+  </div>
+</main>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/withdrawals.js"></script>
+
+</body>
+</html>

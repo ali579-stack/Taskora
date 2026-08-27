@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+<script src="../assets/js/theme.js"></script>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Worker Dashboard — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+
+
+
+
+
+
+
+
+<style>
+/* ===== Available Tasks ===== */
+#tasks .section-toolbar {
+  margin-bottom: 22px;
+}
+
+#tasks .section-toolbar h2 {
+  margin-bottom: 5px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+#tasks .section-toolbar p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+#tasks .task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 18px;
+}
+
+#tasks .task-card {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #e8edf5;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+#tasks .task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, .10);
+}
+
+#tasks .task-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+#tasks .task-category {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#tasks .task-reward {
+  color: #059669;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+#tasks .task-card h3 {
+  margin: 0 0 9px;
+  color: #0f172a;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+#tasks .task-card p {
+  min-height: 44px;
+  margin: 0 0 17px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#tasks .task-meta {
+  display: flex;
+  gap: 14px;
+  padding: 11px 0;
+  margin-bottom: 15px;
+  border-top: 1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
+  color: #64748b;
+  font-size: 12px;
+}
+
+#tasks .btn-full {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  #tasks .task-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #tasks .task-card {
+    padding: 18px;
+  }
+}
+</style>
+
+
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/icons.js"></script>
+
+
+
+
+<style id="my-account-topbar">
+.dashboard-header .header-account{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  height:42px !important;
+  padding:0 12px !important;
+  border:1px solid var(--border,#e5e7eb) !important;
+  border-radius:11px !important;
+  color:var(--text,#172033) !important;
+  background:var(--surface,#fff) !important;
+  text-decoration:none !important;
+  font-size:14px !important;
+  font-weight:600 !important;
+  white-space:nowrap !important;
+}
+
+.dashboard-header .header-account svg{
+  width:19px !important;
+  height:19px !important;
+}
+
+@media(max-width:700px){
+  .dashboard-header .header-account span{
+    display:none !important;
+  }
+}
+</style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<div class="app-shell">
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="sidebar-header">
+
+      <a
+        class="logo"
+        href="../index.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-item active" href="#dashboard">
+        <span><i data-lucide="house"></i></span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" href="#submissions">
+        <span><i data-lucide="clipboard-pen"></i></span>
+        <span>My Submissions</span>
+      </a>
+
+      <a class="nav-item" href="#results">
+        <span><i data-lucide="chart-column"></i></span>
+        <span>Results</span>
+      </a>
+
+      <a class="nav-item" href="#earnings">
+        <span><i data-lucide="wallet"></i></span>
+        <span>Earnings</span>
+      </a>
+
+      <a class="nav-item" href="tasks.html">
+        <span><i data-lucide="clipboard-list"></i></span>
+        <span>Find Tasks</span>
+      </a>
+
+      <a class="nav-item" href="withdraw.html">
+        <span><i data-lucide="credit-card"></i></span>
+        <span>Withdrawals</span>
+      </a>
+
+      <a class="nav-item" href="#orders">
+        <span><i data-lucide="shopping-cart"></i></span>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" href="#notifications">
+        <span><i data-lucide="bell"></i></span>
+        <span>Notifications</span>
+        <span class="notification-badge">3</span>
+      </a>
+
+      <a class="nav-item" href="profile.html">
+        <span><i data-lucide="user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a class="nav-item" href="#faq">
+        <span><i data-lucide="circle-help"></i></span>
+        <span>FAQ</span>
+      </a>
+
+      <a class="nav-item" href="#support">
+        <span><i data-lucide="life-buoy"></i></span>
+        <span>Support</span>
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+        <span><i data-lucide="log-out"></i></span>
+        <span>Sign Out</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    id="sidebarOverlay"
+    class="sidebar-overlay"
+  ></div>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main-content">
+
+
+    <!-- HEADER -->
+
+    <header class="dashboard-header">
+
+  <div class="header-left">
+    <button
+      id="menuButton"
+      class="menu-button"
+      type="button"
+      aria-label="Open menu"
+    >
+      <i data-lucide="menu"></i>
+    </button>
+
+    <div class="header-search">
+      <input
+        type="search"
+        id="taskSearch"
+        placeholder="Search tasks..."
+        autocomplete="off"
+      >
+    </div>
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Toggle theme"
+    >
+      <i data-lucide="moon"></i>
+    </button>
+
+
+    <select
+      id="languageSelect"
+      class="language-select"
+      aria-label="Language"
+    >
+      <option value="en">EN</option>
+      <option value="ur">اردو</option>
+      <option value="ar">العربية</option>
+      <option value="de">DE</option>
+      <option value="fr">FR</option>
+    </select>
+
+    <button
+      class="header-icon"
+      type="button"
+      aria-label="Notifications"
+    >
+      <i data-lucide="bell"></i>
+      <span class="header-notification-dot"></span>
+    </button>
+
+  </div>
+
+</header>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section
+      id="dashboard"
+      class="dashboard-content"
+    >
+
+
+      <!-- PAGE HEADING -->
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            WORKER AREA
+          </span>
+
+          <h1>Dashboard</h1>
+
+          <p>
+            Welcome back. Find your next task and start earning.
+          </p>
+
+        </div>
+
+
+        <a
+          href="tasks.html"
+          class="btn btn-primary"
+        >
+          Find Tasks
+        </a>
+
+      </div>
+
+
+
+
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon blue"><i data-lucide="wallet"></i></div>
+
+          <div>
+
+            <span>Available Balance</span>
+
+            <strong id="dashboardAvailableBalance">
+              $0.00
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon orange"><i data-lucide="clock-3"></i></div>
+
+          <div>
+
+            <span>Pending Balance</span>
+
+            <strong id="dashboardPendingBalance">
+              $0.00
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon green"><i data-lucide="trending-up"></i></div>
+
+          <div>
+
+            <span>Total Earnings</span>
+
+            <strong id="dashboardTotalEarnings">
+              $0.00
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon purple"><i data-lucide="badge-check"></i></div>
+
+          <div>
+
+            <span>Success Rate</span>
+
+            <strong id="dashboardSuccessRate">0%</strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           TASKS
+      ================================================== -->
+
+      
+
+
+      <!-- =================================================
+           SUBMISSIONS
+      ================================================== -->
+
+
+      
+      <section class="dashboard-section completed-tasks-section">
+        <div class="section-toolbar">
+          <div>
+            <span class="eyebrow">COMPLETED TASKS</span>
+            <h2>Recently completed</h2>
+            <p class="muted">Your latest completed and approved tasks.</p>
+          </div>
+
+          <a href="#submissions" class="btn btn-outline">View All</a>
+        </div>
+
+        <div id="completedTasksList" class="completed-tasks-list">
+          <div class="completed-task-empty">
+            Loading completed tasks...
+          </div>
+        </div>
+      </section>
+
+<section class="dashboard-section platform-section">
+        <div class="section-toolbar">
+          <div>
+            <span class="eyebrow">SUPPORTED PLATFORMS</span>
+            <h2>Choose tasks from your linked accounts</h2>
+            <p class="muted">
+              Link a social account to unlock matching tasks.
+            </p>
+          </div>
+
+          <a href="profile.html#profile-linked-accounts" class="btn btn-outline">
+            Manage Accounts
+          </a>
+        </div>
+
+        <div class="platform-grid">
+          <a class="platform-card" href="profile.html#profile-linked-accounts">
+            <span class="platform-icon instagram">◎</span>
+            <span>
+              <strong>Instagram</strong>
+              <small>Follow & engagement tasks</small>
+            </span>
+          </a>
+
+          <a class="platform-card" href="profile.html#profile-linked-accounts">
+            <span class="platform-icon tiktok"><i data-lucide="music-2"></i></span>
+            <span>
+              <strong>TikTok</strong>
+              <small>Video & engagement tasks</small>
+            </span>
+          </a>
+
+          <a class="platform-card" href="profile.html#profile-linked-accounts">
+            <span class="platform-icon youtube">▶</span>
+            <span>
+              <strong>YouTube</strong>
+              <small>Channel & video tasks</small>
+            </span>
+          </a>
+
+          <a class="platform-card" href="profile.html#profile-linked-accounts">
+            <span class="platform-icon facebook">f</span>
+            <span>
+              <strong>Facebook</strong>
+              <small>Page & engagement tasks</small>
+            </span>
+          </a>
+        </div>
+      </section>
+      <section
+        id="submissions"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Recent Submissions</h2>
+
+            <p>
+              Your latest task activity.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+                <th>Task</th>
+                <th>Date</th>
+                <th>Reward</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr>
+
+                <td>Website Test</td>
+
+                <td>25 Aug 2026</td>
+
+                <td>$1.20</td>
+
+                <td>
+                  <span class="status status-pending">
+                    Pending
+                  </span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>Follow Account</td>
+
+                <td>24 Aug 2026</td>
+
+                <td>$0.40</td>
+
+                <td>
+                  <span class="status status-approved">
+                    Approved
+                  </span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>Survey</td>
+
+                <td>24 Aug 2026</td>
+
+                <td>$0.75</td>
+
+                <td>
+                  <span class="status status-rejected">
+                    Rejected
+                  </span>
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           RESULTS
+      ================================================== -->
+
+      <section
+        id="results"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Results</h2>
+
+            <p>
+              Your task approval and performance results.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="earnings-card">
+
+          <div>
+            <span>Approved</span>
+            <strong>42</strong>
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <strong>3</strong>
+          </div>
+
+          <div>
+            <span>Rejected</span>
+            <strong>2</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           EARNINGS
+      ================================================== -->
+
+      <section
+        id="earnings"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Earnings</h2>
+
+            <p>
+              Your recent earnings activity.
+            </p>
+
+          </div>
+
+
+          <a
+            href="withdraw.html"
+            class="btn btn-primary"
+          >
+            Withdraw
+          </a>
+
+        </div>
+
+
+        <div class="earnings-card">
+
+          <div>
+            <span>Total Earned</span>
+            <strong>$0.00</strong>
+          </div>
+
+          <div>
+            <span>Available</span>
+            <strong>$0.00</strong>
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <strong>$0.00</strong>
+          </div>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>
+            Task Reward Information
+          </h3>
+
+          <p>
+            Worker rewards are calculated from the task's
+            funded reward pool. TASKORA's configured platform
+            fee is 10%.
+          </p>
+
+
+          <div class="earnings-card">
+
+            <div>
+              <span>TASKORA Fee</span>
+              <strong>10%</strong>
+            </div>
+
+            <div>
+              <span>Worker Reward Pool</span>
+              <strong>90%</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+
+
+      <!-- =================================================
+           ORDERS
+      ================================================== -->
+
+      <section style="display:none"
+        id="orders"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Orders</h2>
+
+            <p>
+              Your task-related orders and activities.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            No active orders.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           LINKED ACCOUNTS
+      ================================================== -->
+
+      <section
+        id="accounts"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              SOCIAL ACCOUNTS
+            </span>
+
+            <h2>
+              Linked Accounts
+            </h2>
+
+            <p>
+              Connect the social accounts you use for eligible
+              TASKORA tasks.
+            </p>
+
+          </div>
+
+          <strong id="linkedAccountsCount">
+            0 / 14
+          </strong>
+
+        </div>
+
+        <div
+          id="linkedAccountsList"
+          class="linked-accounts-groups"
+        ></div>
+
+      </section>
+
+
+      <!-- =================================================
+           NOTIFICATIONS
+      ================================================== -->
+
+      <section
+        id="notifications"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Notifications</h2>
+
+            <p>
+              Your latest TASKORA notifications.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            You have 3 new notifications.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           PROFILE
+      ================================================== -->
+
+      <section
+        id="profile"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Profile</h2>
+
+            <p>
+              Manage your worker profile.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            Worker profile settings.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           FAQ
+      ================================================== -->
+
+      <section
+        id="faq"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>FAQ</h2>
+
+            <p>
+              Frequently asked questions.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <h3>
+            How do worker rewards work?
+          </h3>
+
+          <p>
+            A trusted user funds a task. TASKORA applies the
+            configured platform fee, and the remaining amount
+            forms the worker reward pool.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           SUPPORT
+      ================================================== -->
+
+      <section
+        id="support"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Support</h2>
+
+            <p>
+              Need help with your TASKORA account?
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            Contact TASKORA support for assistance.
+          </p>
+
+        </div>
+
+      </section>
+
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SCRIPTS
+====================================================== -->
+
+<script src="../assets/js/config.js"></script>
+
+<script src="../assets/js/auth.js"></script>
+
+
+
+
+<script>
+
+"use strict";
+
+
+/* =====================================================
+   CONSTANTS
+====================================================== */
+
+const TASKORA_MAX_LINKED_ACCOUNTS = 14;
+
+
+/* =====================================================
+   TASK START
+====================================================== */
+
+function startTask(taskName) {
+
+  TaskoraPopup.alert(
+    "Starting task: " +
+    taskName +
+    "\n\n" +
+    "The task workflow will be connected to the backend."
+  );
+
+}
+
+
+/* =====================================================
+   SOCIAL ACCOUNTS
+====================================================== */
+
+async function addSocialAccount(platform) {
+
+  const accountName = prompt(
+    "Enter your " +
+    platform +
+    " username or account name:"
+  );
+
+
+  if (!accountName) {
+    return;
+  }
+
+
+  const cleanName =
+    accountName.trim();
+
+
+  if (!cleanName) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        credentials: "include",
+
+        body: JSON.stringify({
+          platform: platform,
+          accountName: cleanName
+        })
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      TaskoraPopup.alert(
+        data.message ||
+        "Unable to link this account."
+      );
+
+      return;
+
+    }
+
+
+    TaskoraPopup.alert(
+      "Account linked successfully.\n\n" +
+      "Status: Pending verification"
+    );
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Link account error:",
+      error
+    );
+
+
+    TaskoraPopup.alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+async function loadLinkedAccounts() {
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "GET",
+        credentials: "include"
+      }
+    );
+
+
+    if (!response.ok) {
+      return;
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const accounts =
+      Array.isArray(data.accounts)
+        ? data.accounts
+        : [];
+
+
+    const countElement =
+      document.getElementById(
+        "linkedAccountsCount"
+      );
+
+
+    if (countElement) {
+
+      countElement.textContent =
+        `${accounts.length} / ${TASKORA_MAX_LINKED_ACCOUNTS}`;
+
+    }
+
+
+    renderLinkedAccounts(accounts);
+
+  } catch (error) {
+
+    console.error(
+      "Load linked accounts error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderLinkedAccounts(accounts) {
+
+  const list =
+    document.getElementById(
+      "linkedAccountsList"
+    );
+
+  if (!list) {
+    return;
+  }
+
+  /*
+   * These are the existing platform limits.
+   * The backend remains the final authority/enforcer.
+   */
+  const platforms = [
+    {
+      key: "instagram",
+      name: "Instagram",
+      limit: 3
+    },
+    {
+      key: "tiktok",
+      name: "TikTok",
+      limit: 3
+    },
+    {
+      key: "youtube",
+      name: "YouTube",
+      limit: 2
+    },
+    {
+      key: "facebook",
+      name: "Facebook",
+      limit: 2
+    },
+    {
+      key: "x",
+      name: "X",
+      limit: 2
+    },
+    {
+      key: "other",
+      name: "Other",
+      limit: 2
+    }
+  ];
+
+  const grouped = {};
+
+  platforms.forEach(function (platform) {
+    grouped[platform.key] = [];
+  });
+
+  accounts.forEach(function (account) {
+
+    const platform =
+      String(account.platform || "").toLowerCase();
+
+    if (grouped[platform]) {
+      grouped[platform].push(account);
+    }
+
+  });
+
+  list.innerHTML = "";
+
+  platforms.forEach(function (platform) {
+
+    const platformAccounts =
+      grouped[platform.key] || [];
+
+    const count =
+      platformAccounts.length;
+
+    const group =
+      document.createElement("div");
+
+    group.className =
+      "linked-account-group";
+
+    group.innerHTML = `
+      <div class="linked-account-group-header">
+
+        <div>
+
+          <span class="task-category">
+            ${escapeHtml(platform.name)}
+          </span>
+
+          <h3>
+            ${escapeHtml(platform.name)}
+          </h3>
+
+        </div>
+
+        <strong>
+          ${count} / ${platform.limit}
+        </strong>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        onclick="addSocialAccount('${platform.key}')"
+        ${count >= platform.limit ? "disabled" : ""}
+      >
+        ${count >= platform.limit ? "Limit Reached" : "+ Add " + escapeHtml(platform.name)}
+      </button>
+
+      <div class="linked-account-slots">
+        ${Array.from(
+          { length: platform.limit },
+          function (_, index) {
+
+            const account =
+              platformAccounts[index];
+
+            if (!account) {
+
+              return `
+                <div class="linked-account-slot linked-account-slot-empty">
+
+                  <span>
+                    Empty slot
+                  </span>
+
+                </div>
+              `;
+
+            }
+
+            return `
+              <div class="linked-account-slot linked-account-slot-filled">
+
+                <div class="linked-account-slot-info">
+
+                  <strong>
+                    ${escapeHtml(
+                      account.account_name || "Unnamed account"
+                    )}
+                  </strong>
+
+                  <span class="status status-pending">
+                    ${escapeHtml(
+                      account.verification_status || "Pending"
+                    )}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick="removeSocialAccount(${Number(account.id)})"
+                >
+                  Remove
+                </button>
+
+              </div>
+            `;
+
+          }
+        ).join("")}
+      </div>
+    `;
+
+    list.appendChild(group);
+
+  });
+
+}
+
+
+async function removeSocialAccount(accountId) {
+
+  const confirmed =
+    await TaskoraPopup.confirm(
+      "Remove this linked account?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts/${accountId}`,
+      {
+        method: "DELETE",
+        credentials: "include"
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      TaskoraPopup.alert(
+        data.message ||
+        "Unable to remove account."
+      );
+
+      return;
+
+    }
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Remove account error:",
+      error
+    );
+
+
+    TaskoraPopup.alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   SIDEBAR
+====================================================== */
+
+const sidebar =
+  document.getElementById("sidebar");
+
+
+const menuButton =
+  document.getElementById("menuButton");
+
+
+const sidebarClose =
+  document.getElementById("sidebarClose");
+
+
+const sidebarOverlay =
+  document.getElementById("sidebarOverlay");
+
+
+function openSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.add("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.add("active");
+
+  }
+
+}
+
+
+function closeSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.remove("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.remove("active");
+
+  }
+
+}
+
+
+if (menuButton) {
+
+  menuButton.addEventListener(
+    "click",
+    openSidebar
+  );
+
+}
+
+
+if (sidebarClose) {
+
+  sidebarClose.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+if (sidebarOverlay) {
+
+  sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+document
+  .querySelectorAll(
+    ".sidebar-nav .nav-item"
+  )
+  .forEach(
+    function (item) {
+
+      item.addEventListener(
+        "click",
+        closeSidebar
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   SECTION NAVIGATION
+====================================================== */
+
+(function initSectionNavigation() {
+
+  const sections =
+    Array.from(
+      document.querySelectorAll(
+        ".dashboard-section"
+      )
+    );
+
+  const navItems =
+    Array.from(
+      document.querySelectorAll(
+        ".sidebar-nav .nav-item[href^='#']"
+      )
+    );
+
+  function activateSection(hash) {
+
+    let target =
+      (hash || "").replace("#", "");
+
+    if (!target) {
+      target = "dashboard";
+    }
+
+    const section =
+      document.getElementById(target);
+
+    /*
+     * If a navbar target does not exist, fall back
+     * to the dashboard instead of leaving the page blank.
+     */
+    if (!section) {
+      target = "dashboard";
+    }
+
+    sections.forEach(function (item) {
+
+      item.style.display =
+        item.id === target
+          ? ""
+          : "none";
+
+    });
+
+    navItems.forEach(function (item) {
+
+      const itemHash =
+        item.getAttribute("href");
+
+      item.classList.toggle(
+        "active",
+        itemHash === "#" + target
+      );
+
+    });
+
+    const activeSection =
+      document.getElementById(target);
+
+    if (activeSection) {
+
+      activeSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+  }
+
+  navItems.forEach(function (item) {
+
+    item.addEventListener(
+      "click",
+      function () {
+
+        const hash =
+          item.getAttribute("href");
+
+        if (hash) {
+          activateSection(hash);
+        }
+
+      }
+    );
+
+  });
+
+  window.addEventListener(
+    "hashchange",
+    function () {
+      activateSection(
+        window.location.hash
+      );
+    }
+  );
+
+  activateSection(
+    window.location.hash
+  );
+
+})();
+
+/* =====================================================
+   LANGUAGE
+====================================================== */
+
+const languageSelect =
+  document.getElementById(
+    "languageSelect"
+  );
+
+
+if (languageSelect) {
+
+  const savedLanguage =
+    localStorage.getItem(
+      "taskora_language"
+    );
+
+
+  if (savedLanguage) {
+
+    languageSelect.value =
+      savedLanguage;
+
+  }
+
+
+  languageSelect.addEventListener(
+    "change",
+    function () {
+
+      localStorage.setItem(
+        "taskora_language",
+        this.value
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SEARCH
+====================================================== */
+
+const taskSearch =
+  document.getElementById(
+    "taskSearch"
+  );
+
+
+if (taskSearch) {
+
+  taskSearch.addEventListener(
+    "input",
+    function () {
+
+      const query =
+        this.value
+          .trim()
+          .toLowerCase();
+
+
+      document
+        .querySelectorAll(
+          "#tasks .task-card"
+        )
+        .forEach(
+          function (card) {
+
+            const text =
+              card.textContent
+                .toLowerCase();
+
+
+            card.style.display =
+              !query ||
+              text.includes(query)
+                ? ""
+                : "none";
+
+          }
+        );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   LOAD LINKED ACCOUNTS
+====================================================== */
+
+loadLinkedAccounts();
+
+</script>
+
+
+<script>
+  requireLogin();
+</script>
+
+
+
+<script src="../assets/js/dashboard-earnings.js"></script>
+
+
+
+
+<script>
+async function loadCompletedTasks() {
+  const container = document.getElementById("completedTasksList");
+  if (!container || typeof taskoraApi !== "function") return;
+
+  try {
+    const response = await taskoraApi("/submissions/mine");
+    const submissions = Array.isArray(response?.submissions)
+      ? response.submissions
+      : [];
+
+    const completed = submissions
+      .filter(item =>
+        ["approved", "completed"].includes(
+          String(item.status || "").toLowerCase()
+        )
+      )
+      .slice(0, 3);
+
+    if (!completed.length) {
+      container.innerHTML = `
+        <div class="completed-task-empty">
+          <span class="completed-empty-icon"><i data-lucide="check"></i></span>
+          <div>
+            <strong>No completed tasks yet</strong>
+            <p>Complete your first task and it will appear here.</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = completed.map(item => {
+      const title = escapeHtml(item.title || "Completed Task");
+      const type = escapeHtml(item.type || "Task");
+      const reward = Number(
+        item.reward || item.reward_amount || item.reward_per_worker || 0
+      ).toFixed(2);
+
+      const dateValue = item.created_at || item.created_at;
+      const date = dateValue
+        ? new Date(dateValue).toLocaleDateString()
+        : "Recently";
+
+      return `
+        <article class="completed-task-card">
+          <div class="completed-task-icon"><i data-lucide="check"></i></div>
+
+          <div class="completed-task-info">
+            <strong>${title}</strong>
+            <span>${type} · Completed ${date}</span>
+          </div>
+
+          <div class="completed-task-reward">
+            +$${reward}
+          </div>
+        </article>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("Completed tasks error:", error);
+
+    container.innerHTML = `
+      <div class="completed-task-empty">
+        Unable to load completed tasks.
+      </div>
+    `;
+  }
+}
+
+if (typeof escapeHtml !== "function") {
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+}
+
+loadCompletedTasks();
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+<body>
+<h3>Token test</h3>
+<pre id="out"></pre>
+<script>
+document.getElementById("out").textContent =
+  localStorage.getItem("taskora_token") || "NO TOKEN";
+</script>
+</body>
+</html>

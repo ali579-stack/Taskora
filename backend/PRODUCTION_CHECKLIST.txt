@@ -1,0 +1,20 @@
+TASKORA PRODUCTION CHECKLIST
+
+[x] USD currency settings verified
+[x] Withdrawal UI verified
+[x] Helmet security headers enabled
+[x] API rate limiting enabled
+[x] Login rate limiting enabled
+[x] CORS restricted
+[x] .env ignored
+[x] JWT secret rotated
+[x] npm audit clean
+[x] PostgreSQL settings verified
+
+TODO:
+[ ] Add production DATABASE_URL
+[ ] Add production JWT_SECRET
+[ ] Set FRONTEND_URL to real domain
+[ ] Enable HTTPS
+[ ] Deploy backend
+[ ] Connect domain

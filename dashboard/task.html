@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="../assets/js/theme.js"></script>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Complete Task — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+</head>
+
+<body class="dashboard-page">
+
+<div class="app-shell">
+
+  <main class="main-content">
+
+    <header class="dashboard-header">
+
+      <a
+        class="logo"
+        href="dashboard.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <div class="header-actions">
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+  <i data-lucide="moon"></i>
+</button>
+
+
+        <a
+          href="dashboard.html"
+          class="btn btn-outline"
+        >
+          ← Dashboard
+        </a>
+
+      </div>
+
+    </header>
+
+
+    <section class="dashboard-content">
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            TASK
+          </span>
+
+          <h1 id="taskTitle">
+            Loading Task...
+          </h1>
+
+          <p id="taskDescription">
+            Loading task details...
+          </p>
+
+        </div>
+
+        <div class="task-timer-box">
+
+          <span>
+            Time Remaining
+          </span>
+
+          <strong id="taskTimer">
+            --:--
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- TASK INFORMATION -->
+
+      <section class="dashboard-section">
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon green">
+              €
+            </div>
+
+            <div>
+
+              <span>
+                Reward
+              </span>
+
+              <strong id="taskReward">
+                €0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon blue">
+              ⏱
+            </div>
+
+            <div>
+
+              <span>
+                Timer
+              </span>
+
+              <strong id="taskDuration">
+                -- min
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon purple">
+              <i data-lucide="file-pen"></i>
+            </div>
+
+            <div>
+
+              <span>
+                Proof
+              </span>
+
+              <strong id="taskProofStatus">
+                Required
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- INSTRUCTIONS -->
+
+      <section class="dashboard-section">
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>
+              Task Instructions
+            </h2>
+
+            <p>
+              Complete the task exactly as described.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="taskInstructions"
+          class="dashboard-card"
+        >
+
+          Loading instructions...
+
+        </div>
+
+
+        <div
+          id="taskLinkContainer"
+          class="dashboard-card"
+          style="display:none;"
+        >
+
+          <a
+            id="taskLink"
+            class="btn btn-primary"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Task
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- SUBMISSION -->
+
+      <section class="dashboard-section">
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>
+              Submit Proof
+            </h2>
+
+            <p>
+              Provide the required proof after completing the task.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <form id="taskSubmissionForm">
+
+          <div class="form-group">
+
+            <label for="proofText">
+              Proof / Notes
+            </label>
+
+            <textarea
+              id="proofText"
+              name="proofText"
+              rows="5"
+              placeholder="Enter your proof or completion details..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="proofUrl">
+              Proof URL
+            </label>
+
+            <input
+              id="proofUrl"
+              name="proofUrl"
+              type="url"
+              placeholder="https://example.com/proof"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="proofFile">
+              Proof Screenshot
+            </label>
+
+            <input
+              id="proofFile"
+              name="proofFile"
+              type="file"
+              accept="image/*"
+            >
+
+          </div>
+
+
+          <div
+            id="taskMessage"
+            class="form-message"
+          ></div>
+
+
+          <button
+            id="submitTaskButton"
+            type="submit"
+            class="btn btn-primary"
+          >
+            Submit Task
+          </button>
+
+        </form>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/task-execution.js"></script>
+
+
+
+
+<script>lucide.createIcons();</script>
+</body>
+
+</html>

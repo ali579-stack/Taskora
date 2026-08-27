@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="assets/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — TASKORA</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/js/icons.js"></script>
+</head>
+<body class="auth-page">
+
+<button
+  class="theme-toggle"
+  id="themeToggle"
+  type="button"
+  aria-label="Toggle theme"
+  title="Toggle theme"
+>
+  <i data-lucide="moon"></i>
+</button>
+
+
+
+<div class="auth-container">
+
+  <a class="logo auth-logo" href="index.html">
+    TASK<span>ORA</span>
+  </a>
+
+  <div class="auth-card">
+    <h1>Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your TASKORA account.</p>
+
+    <form id="loginForm">
+
+      <label for="email">Email</label>
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="you@example.com"
+        required
+      >
+
+      <label for="password">Password</label>
+      <div class="password-field">
+        <input
+          id="loginPassword"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        >
+        <button
+          type="button"
+          class="password-toggle"
+          data-password-toggle="loginPassword"
+          aria-label="Show password"
+          aria-pressed="false"
+        ><i data-lucide="eye"></i></button>
+      </div>
+
+      <div class="form-row">
+        <label class="checkbox-label">
+          <input type="checkbox">
+          Remember me
+        </label>
+
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary btn-full" type="submit">
+        Sign In
+      </button>
+
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a href="register.html">Create one</a>
+    </p>
+  </div>
+
+</div>
+
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/login.js"></script>
+<script src="assets/js/password-toggle.js"></script>
+</body>
+</html>

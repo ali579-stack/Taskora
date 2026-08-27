@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="../assets/js/theme.js"></script>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Dashboard — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+</head>
+
+
+<body class="dashboard-page">
+
+
+<div class="app-shell">
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside
+    id="sidebar"
+    class="sidebar"
+  >
+
+    <div class="sidebar-header">
+
+      <a
+        class="logo"
+        href="../index.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+
+      <a
+        class="nav-item active"
+        href="#dashboard"
+      >
+        <span class="nav-icon"><i data-lucide="house"></i></span>
+        <span>Dashboard</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#tasks"
+      >
+        <span class="nav-icon"><i data-lucide="clipboard-list"></i></span>
+        <span>Tasks</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#workers"
+      >
+        <span class="nav-icon"><i data-lucide="users"></i></span>
+        <span>Workers</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#users"
+      >
+        <span class="nav-icon"><i data-lucide="briefcase-business"></i></span>
+        <span>Trusted Users</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#submissions"
+      >
+        <span class="nav-icon"><i data-lucide="file-pen"></i></span>
+        <span>Submissions</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#earnings"
+      >
+        <span class="nav-icon"><i data-lucide="wallet"></i></span>
+        <span>Platform Earnings</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#task-finance"
+      >
+        <span>⚙️</span>
+        <span>Task Finance</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#withdrawals"
+      >
+        <span class="nav-icon"><i data-lucide="credit-card"></i></span>
+        <span>Withdrawals</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#notifications"
+      >
+        <span class="nav-icon"><i data-lucide="bell"></i></span>
+        <span>Notifications</span>
+      </a>
+
+
+      <a
+        class="nav-item"
+        href="#settings"
+      >
+        <span>⚙</span>
+        <span>Settings</span>
+      </a>
+
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+
+        <span class="nav-icon"><i data-lucide="log-out"></i></span>
+
+        <span>
+          Sign Out
+        </span>
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    id="sidebarOverlay"
+    class="sidebar-overlay"
+  ></div>
+
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main-content">
+
+
+    <!-- HEADER -->
+
+    <header class="dashboard-header">
+
+
+      <button
+        id="menuButton"
+        class="menu-button"
+        type="button"
+        aria-label="Open menu"
+      >
+        <i data-lucide="menu"></i>
+      </button>
+
+
+      <div class="header-search">
+
+        <input
+          id="adminSearch"
+          type="search"
+          placeholder="Search..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div class="header-actions">
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+  <i data-lucide="moon"></i>
+</button>
+
+
+
+        <select
+          id="languageSelect"
+          class="language-select"
+          aria-label="Language"
+        >
+
+          <option value="en">
+            EN
+          </option>
+
+          <option value="ur">
+            اردو
+          </option>
+
+          <option value="ar">
+            العربية
+          </option>
+
+          <option value="de">
+            DE
+          </option>
+
+          <option value="fr">
+            FR
+          </option>
+
+        </select>
+
+
+        <button
+          class="header-icon"
+          type="button"
+          aria-label="Notifications"
+        >
+          <i data-lucide="bell"></i>
+        </button>
+
+
+        <button
+          class="profile-button"
+          type="button"
+        >
+
+          <span class="avatar">
+            A
+          </span>
+
+          <span class="profile-name">
+            Admin
+          </span>
+
+        </button>
+
+
+      </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <section
+      id="dashboard"
+      class="dashboard-content"
+    >
+
+
+      <!-- PAGE HEADING -->
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            ADMIN AREA
+          </span>
+
+          <h1>
+            Dashboard
+          </h1>
+
+          <p>
+            Manage TASKORA tasks, workers, finance and withdrawals.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =================================================
+           ADMIN STATS
+      ================================================== -->
+
+      <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon blue">
+            <i data-lucide="users"></i>
+          </div>
+
+          <div>
+
+            <span>
+              Workers
+            </span>
+
+            <strong id="adminWorkerCount">
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon orange">
+            <i data-lucide="clipboard-list"></i>
+          </div>
+
+          <div>
+
+            <span>
+              Active Tasks
+            </span>
+
+            <strong id="adminTaskCount">
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon green">
+            €
+          </div>
+
+          <div>
+
+            <span>
+              Platform Earnings
+            </span>
+
+            <strong id="adminPlatformEarnings">
+              €0.00
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon purple">
+            ⏳
+          </div>
+
+          <div>
+
+            <span>
+              Pending Withdrawals
+            </span>
+
+            <strong id="adminDashboardPendingWithdrawals">
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- =================================================
+           TASKS
+      ================================================== -->
+
+      <section
+        id="tasks"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              TASK MANAGEMENT
+            </span>
+
+            <h2>
+              Tasks
+            </h2>
+
+            <p>
+              Create and manage tasks available to workers.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="createTask()"
+          >
+            Create Task
+          </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Task
+                </th>
+
+                <th>
+                  Category
+                </th>
+
+                <th>
+                  Reward Pool
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="adminTasksTable">
+
+              <tr>
+
+                <td colspan="5">
+                  No tasks loaded.
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           WORKERS
+      ================================================== -->
+
+      <section
+        id="workers"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              USERS
+            </span>
+
+            <h2>
+              Workers
+            </h2>
+
+            <p>
+              Review registered workers and their activity.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Worker
+                </th>
+
+                <th>
+                  Email
+                </th>
+
+                <th>
+                  Earnings
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="adminWorkersTable">
+
+              <tr>
+
+                <td colspan="4">
+                  No workers loaded.
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           TRUSTED USERS
+      ================================================== -->
+
+      <section
+        id="users"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              CUSTOMERS
+            </span>
+
+            <h2>
+              Trusted Users
+            </h2>
+
+            <p>
+              Manage trusted users who fund tasks.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            Trusted user management will connect to the backend.
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           SUBMISSIONS
+      ================================================== -->
+
+      <section
+        id="submissions"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              REVIEW
+            </span>
+
+            <h2>
+              Submissions
+            </h2>
+
+            <p>
+              Review worker task submissions.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Worker
+                </th>
+
+                <th>
+                  Task
+                </th>
+
+                <th>
+                  Reward
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="adminSubmissionsTable">
+
+              <tr>
+
+                <td colspan="5">
+                  No submissions loaded.
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           PLATFORM EARNINGS
+      ================================================== -->
+
+      <section
+        id="earnings"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              FINANCE
+            </span>
+
+            <h2>
+              Platform Earnings
+            </h2>
+
+            <p>
+              TASKORA platform fee and financial overview.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="earnings-card">
+
+
+          <div>
+
+            <span>
+              Total Platform Fees
+            </span>
+
+            <strong id="platformTotalFees">
+              €0.00
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Current Fee Rate
+            </span>
+
+            <strong>
+              10%
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Worker Reward Pool
+            </span>
+
+            <strong id="platformRewardPool">
+              €0.00
+            </strong>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           TASK FINANCE
+      ================================================== -->
+
+      <section
+        id="task-finance"
+        class="admin-section dashboard-section"
+      >
+
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              TASK FINANCE
+            </span>
+
+            <h2>
+              Task Funding
+            </h2>
+
+            <p>
+              Configure how trusted-user funding is divided
+              between TASKORA and workers.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+
+          <div class="form-group">
+
+            <label
+              for="taskFundingAmount"
+            >
+              Task Funding Amount
+            </label>
+
+            <input
+              id="taskFundingAmount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              placeholder="100.00"
+            >
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="calculateTaskFinance()"
+          >
+            Calculate
+          </button>
+
+
+          <div
+            id="taskFinanceResult"
+            class="finance-result"
+            style="
+              display:none;
+              margin-top:20px;
+            "
+          >
+
+
+            <div>
+
+              <span>
+                Trusted User Funding
+              </span>
+
+              <strong id="financeFunding">
+                €0.00
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                TASKORA Fee
+              </span>
+
+              <strong id="financeFee">
+                €0.00
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Worker Reward Pool
+              </span>
+
+              <strong id="financeRewardPool">
+                €0.00
+              </strong>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           WITHDRAWALS
+      ================================================== -->
+
+      <section
+        id="withdrawals"
+        class="admin-section dashboard-section"
+      >
+
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              FINANCE
+            </span>
+
+            <h2>
+              Worker Withdrawals
+            </h2>
+
+            <p>
+              Review and process worker payment requests.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- WITHDRAWAL SUMMARY -->
+
+        <div class="stats-grid">
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon orange">
+              ⏳
+            </div>
+
+            <div>
+
+              <span>
+                Pending
+              </span>
+
+              <strong id="adminPendingWithdrawals">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon blue">
+              €
+            </div>
+
+            <div>
+
+              <span>
+                Pending Amount
+              </span>
+
+              <strong id="adminPendingAmount">
+                €0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon purple">
+              ⚙
+            </div>
+
+            <div>
+
+              <span>
+                Processing
+              </span>
+
+              <strong id="adminProcessingWithdrawals">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon green">
+              ✓
+            </div>
+
+            <div>
+
+              <span>
+                Completed
+              </span>
+
+              <strong id="adminCompletedWithdrawals">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- WITHDRAWAL TABLE -->
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Worker
+                </th>
+
+                <th>
+                  Amount
+                </th>
+
+                <th>
+                  Method
+                </th>
+
+                <th>
+                  Account
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Date
+                </th>
+
+                <th>
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody
+              id="adminWithdrawalsTable"
+            >
+
+              <tr>
+
+                <td colspan="7">
+                  Loading withdrawals...
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           NOTIFICATIONS
+      ================================================== -->
+
+      <section
+        id="notifications"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              SYSTEM
+            </span>
+
+            <h2>
+              Notifications
+            </h2>
+
+            <p>
+              System and user notifications.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            No new system notifications.
+          </p>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           SETTINGS
+      ================================================== -->
+
+      <section
+        id="settings"
+        class="admin-section dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              CONFIGURATION
+            </span>
+
+            <h2>
+              Settings
+            </h2>
+
+            <p>
+              TASKORA administration settings.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <div class="form-group">
+
+            <label>
+              Platform Fee
+            </label>
+
+            <input
+              type="text"
+              value="10%"
+              readonly
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Currency
+            </label>
+
+            <input
+              type="text"
+              value="EUR (€)"
+              readonly
+            >
+
+          </div>
+
+
+          <p>
+            Financial settings should be changed through
+            the secure backend/admin configuration rather
+            than trusted browser code.
+          </p>
+
+        </div>
+
+      </section>
+
+
+    </section>
+
+  </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     SCRIPTS
+====================================================== -->
+
+<script src="../assets/js/config.js"></script>
+
+<script src="../assets/js/auth.js"></script>
+
+<script src="../assets/js/admin-finance.js"></script>
+
+<script src="../assets/js/admin-withdrawals.js"></script>
+
+
+<script>
+
+  /* =====================================================
+     SIDEBAR
+  ====================================================== */
+
+  const sidebar =
+    document.getElementById(
+      "sidebar"
+    );
+
+  const menuButton =
+    document.getElementById(
+      "menuButton"
+    );
+
+  const sidebarClose =
+    document.getElementById(
+      "sidebarClose"
+    );
+
+  const sidebarOverlay =
+    document.getElementById(
+      "sidebarOverlay"
+    );
+
+
+  function openSidebar() {
+
+    if (sidebar) {
+
+      sidebar.classList.add(
+        "open"
+      );
+
+    }
+
+    if (sidebarOverlay) {
+
+      sidebarOverlay.classList.add(
+        "active"
+      );
+
+    }
+
+  }
+
+
+  function closeSidebar() {
+
+    if (sidebar) {
+
+      sidebar.classList.remove(
+        "open"
+      );
+
+    }
+
+    if (sidebarOverlay) {
+
+      sidebarOverlay.classList.remove(
+        "active"
+      );
+
+    }
+
+  }
+
+
+  if (menuButton) {
+
+    menuButton.addEventListener(
+      "click",
+      openSidebar
+    );
+
+  }
+
+
+  if (sidebarClose) {
+
+    sidebarClose.addEventListener(
+      "click",
+      closeSidebar
+    );
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.addEventListener(
+      "click",
+      closeSidebar
+    );
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".sidebar-nav .nav-item"
+    )
+    .forEach(
+      function (item) {
+
+        item.addEventListener(
+          "click",
+          closeSidebar
+        );
+
+      }
+    );
+
+
+
+  /* =====================================================
+     LANGUAGE
+  ====================================================== */
+
+  const languageSelect =
+    document.getElementById(
+      "languageSelect"
+    );
+
+
+  if (languageSelect) {
+
+    const savedLanguage =
+      localStorage.getItem(
+        "taskora_language"
+      );
+
+
+    if (savedLanguage) {
+
+      languageSelect.value =
+        savedLanguage;
+
+    }
+
+
+    languageSelect.addEventListener(
+      "change",
+      function () {
+
+        localStorage.setItem(
+          "taskora_language",
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+
+  /* =====================================================
+     SEARCH
+  ====================================================== */
+
+  const adminSearch =
+    document.getElementById(
+      "adminSearch"
+    );
+
+
+  if (adminSearch) {
+
+    adminSearch.addEventListener(
+      "input",
+      function () {
+
+        const query =
+          this.value
+            .trim()
+            .toLowerCase();
+
+
+        document
+          .querySelectorAll(
+            ".admin-section"
+          )
+          .forEach(
+            function (section) {
+
+              const text =
+                section.textContent
+                  .toLowerCase();
+
+
+              if (!query) {
+
+                section.style.display =
+                  "";
+
+                return;
+
+              }
+
+
+              section.style.display =
+                text.includes(query)
+                  ? ""
+                  : "none";
+
+            }
+          );
+
+      }
+    );
+
+  }
+
+
+
+  /* =====================================================
+     CREATE TASK PLACEHOLDER
+  ====================================================== */
+
+  function createTask() {
+
+    TaskoraPopup.alert(
+      "Task creation will be connected to the backend."
+    );
+
+  }
+
+
+  window.createTask =
+    createTask;
+
+</script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/admin-withdrawals.js"></script>
+<script src="../assets/js/admin-finance.js"></script>
+
+<script>
+  requireLogin();
+
+  const currentUser = getCurrentUser();
+
+  if (
+    !currentUser ||
+    currentUser.role !== "admin"
+  ) {
+    window.location.href =
+      "admin-login.html";
+  }
+</script>
+
+
+
+
+<script>lucide.createIcons();</script>
+</body>
+
+</html>

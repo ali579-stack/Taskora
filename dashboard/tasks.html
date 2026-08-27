@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../assets/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Tasks — TASKORA</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <style>
+    .tasks-page {
+      padding: 24px 0 40px;
+    }
+
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .tasks-header h1 {
+      margin: 0 0 6px;
+    }
+
+    .tasks-header p {
+      margin: 0;
+      color: #64748b;
+    }
+
+    .available-task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .available-task-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+    }
+
+    .available-task-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .task-type {
+      color: #4f46e5;
+      background: #eef2ff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .task-reward {
+      color: #15803d;
+      font-weight: 800;
+    }
+
+    .available-task-card h3 {
+      margin: 0 0 8px;
+    }
+
+    .available-task-card p {
+      color: #64748b;
+      line-height: 1.6;
+      min-height: 50px;
+    }
+
+    .task-meta-row {
+      display: flex;
+      justify-content: space-between;
+      color: #64748b;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+
+    .task-message {
+      padding: 20px;
+      text-align: center;
+      color: #64748b;
+    }
+
+    @media (max-width: 650px) {
+      .tasks-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  
+.header-back {
+  min-height: 42px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.header-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+.header-back:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .header-back {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+
+/* ===== Find Tasks — polished top bar ===== */
+
+.dashboard-header {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.dashboard-header .header-left {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dashboard-header .header-search {
+  flex: 1;
+  max-width: 520px;
+}
+
+.dashboard-header .header-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.header-back {
+  height: 42px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  box-sizing: border-box;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 11px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: .2s ease;
+}
+
+.header-back svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.2;
+}
+
+.header-back:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+  transform: translateX(-1px);
+}
+
+html[data-theme="dark"] .header-back {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .dashboard-header {
+    min-height: 58px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .dashboard-header .header-search {
+    max-width: none;
+  }
+
+  .header-back {
+    width: 42px;
+    padding: 0;
+  }
+
+  .header-back span {
+    display: none;
+  }
+}
+
+
+/* ===== FIX: Find Tasks top-bar controls ===== */
+
+.dashboard-header .header-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.dashboard-header .theme-toggle,
+.dashboard-header .header-icon {
+  position: relative !important;
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 21 !important;
+}
+
+.dashboard-header .theme-toggle svg,
+.dashboard-header .header-icon svg {
+  width: 19px !important;
+  height: 19px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.dashboard-header .language-select {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 58px !important;
+  height: 42px !important;
+  display: block !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 21 !important;
+}
+
+.dashboard-header .header-back {
+  position: relative !important;
+  z-index: 21 !important;
+  flex: 0 0 auto !important;
+  height: 42px !important;
+  min-width: 116px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.dashboard-header .header-back svg {
+  width: 17px !important;
+  height: 17px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 700px) {
+  .dashboard-header .header-actions {
+    gap: 7px !important;
+  }
+
+  .dashboard-header .header-back {
+    min-width: 42px !important;
+    width: 42px !important;
+    padding: 0 !important;
+  }
+
+  .dashboard-header .header-back span {
+    display: none !important;
+  }
+}
+
+</style>
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/icons.js"></script>
+
+<style id="final-tasks-topbar-fix">
+html body .dashboard-header .header-actions .theme-toggle#themeToggle {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  inset: auto !important;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 42px !important;
+  order: 1 !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  z-index: 5 !important;
+}
+
+html body .dashboard-header .header-actions {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+}
+
+html body .dashboard-header .header-actions .theme-toggle#themeToggle svg {
+  position: static !important;
+  width: 19px !important;
+  height: 19px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 700px) {
+  html body .dashboard-header .header-actions .theme-toggle#themeToggle {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    flex-basis: 40px !important;
+  }
+}
+</style>
+
+
+<style id="final-menu-fix">
+html body .dashboard-header .header-left {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  gap: 14px !important;
+}
+
+html body .dashboard-header .menu-button {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  inset: auto !important;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 42px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 30 !important;
+}
+
+html body .dashboard-header .menu-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+html body .dashboard-header .header-search {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 700px) {
+  html body .dashboard-header .header-left {
+    gap: 8px !important;
+  }
+
+  html body .dashboard-header .menu-button {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    flex-basis: 40px !important;
+  }
+}
+</style>
+
+</head>
+
+<body class="dashboard-page">
+
+<div class="app-shell">
+<aside id="sidebar" class="sidebar">
+
+    <div class="sidebar-header">
+
+      <a
+        class="logo"
+        href="../index.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-item active" href="dashboard.html#dashboard">
+        <span><i data-lucide="house"></i></span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#submissions">
+        <span><i data-lucide="clipboard-pen"></i></span>
+        <span>My Submissions</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#results">
+        <span><i data-lucide="chart-column"></i></span>
+        <span>Results</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#earnings">
+        <span><i data-lucide="wallet"></i></span>
+        <span>Earnings</span>
+      </a>
+
+      <a class="nav-item" href="tasks.html" class="nav-item active">
+        <span><i data-lucide="clipboard-list"></i></span>
+        <span>Find Tasks</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#withdrawals">
+        <span><i data-lucide="credit-card"></i></span>
+        <span>Withdrawals</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#orders">
+        <span><i data-lucide="shopping-cart"></i></span>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#notifications">
+        <span><i data-lucide="bell"></i></span>
+        <span>Notifications</span>
+        <span class="notification-badge">3</span>
+      </a>
+
+      <a class="nav-item" href="profile.html">
+        <span><i data-lucide="user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#faq">
+        <span><i data-lucide="circle-help"></i></span>
+        <span>FAQ</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#support">
+        <span><i data-lucide="life-buoy"></i></span>
+        <span>Support</span>
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+        <span><i data-lucide="log-out"></i></span>
+        <span>Sign Out</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+<div
+  id="sidebarOverlay"
+  class="sidebar-overlay"
+  aria-hidden="true"
+></div>
+
+
+  <main class="main-content">
+
+    <header class="dashboard-header">
+
+  <div class="header-left">
+    <button
+      id="menuButton"
+      class="menu-button"
+      type="button"
+      aria-label="Open menu"
+    >
+      <i data-lucide="menu"></i>
+    </button>
+
+    <div class="header-search">
+      <input
+        type="search"
+        id="taskSearch"
+        placeholder="Search tasks..."
+        autocomplete="off"
+      >
+    </div>
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Toggle theme"
+    >
+      <i data-lucide="moon"></i>
+    </button>
+
+    <select
+      id="languageSelect"
+      class="language-select"
+      aria-label="Language"
+    >
+      <option value="en">EN</option>
+      <option value="ur">اردو</option>
+      <option value="ar">العربية</option>
+      <option value="de">DE</option>
+      <option value="fr">FR</option>
+    </select>
+
+    <button
+      class="header-icon"
+      type="button"
+      aria-label="Notifications"
+    >
+      <i data-lucide="bell"></i>
+      <span class="header-notification-dot"></span>
+    </button>
+
+    <a
+      href="dashboard.html"
+      class="header-back"
+      aria-label="Back to Dashboard"
+    >
+      <i data-lucide="arrow-left"></i>
+      <span>Dashboard</span>
+    </a>
+
+  </div>
+
+</header>
+
+    <section class="dashboard-content tasks-page">
+
+      <div class="tasks-header">
+        <div>
+          <span class="eyebrow">TASKS</span>
+          <h1>Available Tasks</h1>
+          <p>Choose a task that matches your profile.</p>
+        </div>
+      </div>
+<div id="tasksMessage" class="task-message">
+        Loading available tasks...
+      </div>
+
+      <div id="availableTaskGrid" class="available-task-grid"></div>
+
+    </section>
+
+  </main>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+
+<script>
+async function loadAvailableTasks() {
+  const grid = document.getElementById("availableTaskGrid");
+  const message = document.getElementById("tasksMessage");
+
+  try {
+    const response = await taskoraApi("/tasks/available", {
+      method: "GET"
+    });
+
+    const tasks = Array.isArray(response?.tasks)
+      ? response.tasks
+      : [];
+
+    if (!tasks.length) {
+      message.textContent = "No tasks are available right now.";
+      return;
+    }
+
+    message.style.display = "none";
+
+    grid.innerHTML = tasks.map(task => {
+      const reward = Number(task.reward_per_worker || 0).toFixed(2);
+      const remaining =
+        Math.max(
+          0,
+          Number(task.worker_limit || 0) -
+          Number(task.completed_workers || 0)
+        );
+
+      return `
+        <article class="available-task-card">
+
+          <div class="available-task-top">
+            <span class="task-type">
+              ${escapeHtml(task.type || "Task")}
+            </span>
+
+            <span class="task-reward">
+              $${reward}
+            </span>
+          </div>
+
+          <h3>${escapeHtml(task.title || "Untitled Task")}</h3>
+
+          <p>
+            ${escapeHtml(
+              task.description || "Complete this task and submit proof."
+            )}
+          </p>
+
+          <div class="task-meta-row">
+            <span><i data-lucide="users"></i> ${remaining} left</span>
+            <span><i data-lucide="globe"></i> ${escapeHtml(task.language || "en")}</span>
+          </div>
+
+          <a
+            class="btn btn-primary btn-full"
+            href="task.html?id=${encodeURIComponent(task.id)}"
+          >
+            Start Task
+          </a>
+
+        </article>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("Available tasks error:", error);
+
+    if (
+      error?.message ===
+      "Link at least one social account before accessing available tasks."
+    ) {
+      message.innerHTML =
+        '<i data-lucide="link"></i> Link at least one social account to unlock tasks. ' +
+        '<a href="profile.html" style="color:#4f46e5;font-weight:700;">Link an account →</a>';
+      return;
+    }
+
+    message.textContent =
+      error.message || "Unable to load available tasks.";
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+loadAvailableTasks();
+</script>
+
+
+
+
+<script>lucide.createIcons();</script>
+
+<script>
+"use strict";
+
+
+/* =====================================================
+   CONSTANTS
+====================================================== */
+
+const TASKORA_MAX_LINKED_ACCOUNTS = 14;
+
+
+/* =====================================================
+   TASK START
+====================================================== */
+
+function startTask(taskName) {
+
+  TaskoraPopup.alert(
+    "Starting task: " +
+    taskName +
+    "\n\n" +
+    "The task workflow will be connected to the backend."
+  );
+
+}
+
+
+/* =====================================================
+   SOCIAL ACCOUNTS
+====================================================== */
+
+async function addSocialAccount(platform) {
+
+  const accountName = prompt(
+    "Enter your " +
+    platform +
+    " username or account name:"
+  );
+
+
+  if (!accountName) {
+    return;
+  }
+
+
+  const cleanName =
+    accountName.trim();
+
+
+  if (!cleanName) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        credentials: "include",
+
+        body: JSON.stringify({
+          platform: platform,
+          accountName: cleanName
+        })
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      TaskoraPopup.alert(
+        data.message ||
+        "Unable to link this account."
+      );
+
+      return;
+
+    }
+
+
+    TaskoraPopup.alert(
+      "Account linked successfully.\n\n" +
+      "Status: Pending verification"
+    );
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Link account error:",
+      error
+    );
+
+
+    TaskoraPopup.alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+async function loadLinkedAccounts() {
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "GET",
+        credentials: "include"
+      }
+    );
+
+
+    if (!response.ok) {
+      return;
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const accounts =
+      Array.isArray(data.accounts)
+        ? data.accounts
+        : [];
+
+
+    const countElement =
+      document.getElementById(
+        "linkedAccountsCount"
+      );
+
+
+    if (countElement) {
+
+      countElement.textContent =
+        `${accounts.length} / ${TASKORA_MAX_LINKED_ACCOUNTS}`;
+
+    }
+
+
+    renderLinkedAccounts(accounts);
+
+  } catch (error) {
+
+    console.error(
+      "Load linked accounts error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderLinkedAccounts(accounts) {
+
+  const list =
+    document.getElementById(
+      "linkedAccountsList"
+    );
+
+  if (!list) {
+    return;
+  }
+
+  /*
+   * These are the existing platform limits.
+   * The backend remains the final authority/enforcer.
+   */
+  const platforms = [
+    {
+      key: "instagram",
+      name: "Instagram",
+      limit: 3
+    },
+    {
+      key: "tiktok",
+      name: "TikTok",
+      limit: 3
+    },
+    {
+      key: "youtube",
+      name: "YouTube",
+      limit: 2
+    },
+    {
+      key: "facebook",
+      name: "Facebook",
+      limit: 2
+    },
+    {
+      key: "x",
+      name: "X",
+      limit: 2
+    },
+    {
+      key: "other",
+      name: "Other",
+      limit: 2
+    }
+  ];
+
+  const grouped = {};
+
+  platforms.forEach(function (platform) {
+    grouped[platform.key] = [];
+  });
+
+  accounts.forEach(function (account) {
+
+    const platform =
+      String(account.platform || "").toLowerCase();
+
+    if (grouped[platform]) {
+      grouped[platform].push(account);
+    }
+
+  });
+
+  list.innerHTML = "";
+
+  platforms.forEach(function (platform) {
+
+    const platformAccounts =
+      grouped[platform.key] || [];
+
+    const count =
+      platformAccounts.length;
+
+    const group =
+      document.createElement("div");
+
+    group.className =
+      "linked-account-group";
+
+    group.innerHTML = `
+      <div class="linked-account-group-header">
+
+        <div>
+
+          <span class="task-category">
+            ${escapeHtml(platform.name)}
+          </span>
+
+          <h3>
+            ${escapeHtml(platform.name)}
+          </h3>
+
+        </div>
+
+        <strong>
+          ${count} / ${platform.limit}
+        </strong>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        onclick="addSocialAccount('${platform.key}')"
+        ${count >= platform.limit ? "disabled" : ""}
+      >
+        ${count >= platform.limit ? "Limit Reached" : "+ Add " + escapeHtml(platform.name)}
+      </button>
+
+      <div class="linked-account-slots">
+        ${Array.from(
+          { length: platform.limit },
+          function (_, index) {
+
+            const account =
+              platformAccounts[index];
+
+            if (!account) {
+
+              return `
+                <div class="linked-account-slot linked-account-slot-empty">
+
+                  <span>
+                    Empty slot
+                  </span>
+
+                </div>
+              `;
+
+            }
+
+            return `
+              <div class="linked-account-slot linked-account-slot-filled">
+
+                <div class="linked-account-slot-info">
+
+                  <strong>
+                    ${escapeHtml(
+                      account.account_name || "Unnamed account"
+                    )}
+                  </strong>
+
+                  <span class="status status-pending">
+                    ${escapeHtml(
+                      account.verification_status || "Pending"
+                    )}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick="removeSocialAccount(${Number(account.id)})"
+                >
+                  Remove
+                </button>
+
+              </div>
+            `;
+
+          }
+        ).join("")}
+      </div>
+    `;
+
+    list.appendChild(group);
+
+  });
+
+}
+
+
+async function removeSocialAccount(accountId) {
+
+  const confirmed =
+    await TaskoraPopup.confirm(
+      "Remove this linked account?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts/${accountId}`,
+      {
+        method: "DELETE",
+        credentials: "include"
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      TaskoraPopup.alert(
+        data.message ||
+        "Unable to remove account."
+      );
+
+      return;
+
+    }
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Remove account error:",
+      error
+    );
+
+
+    TaskoraPopup.alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   SIDEBAR
+====================================================== */
+
+const sidebar =
+  document.getElementById("sidebar");
+
+
+const menuButton =
+  document.getElementById("menuButton");
+
+
+const sidebarClose =
+  document.getElementById("sidebarClose");
+
+
+const sidebarOverlay =
+  document.getElementById("sidebarOverlay");
+
+
+function openSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.add("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.add("active");
+
+  }
+
+}
+
+
+function closeSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.remove("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.remove("active");
+
+  }
+
+}
+
+
+if (menuButton) {
+
+  menuButton.addEventListener(
+    "click",
+    openSidebar
+  );
+
+}
+
+
+if (sidebarClose) {
+
+  sidebarClose.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+if (sidebarOverlay) {
+
+  sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+document
+  .querySelectorAll(
+    ".sidebar-nav .nav-item"
+  )
+  .forEach(
+    function (item) {
+
+      item.addEventListener(
+        "click",
+        closeSidebar
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   SECTION NAVIGATION
+====================================================== */
+
+(function initSectionNavigation() {
+
+  const sections =
+    Array.from(
+      document.querySelectorAll(
+        ".dashboard-section"
+      )
+    );
+
+  const navItems =
+    Array.from(
+      document.querySelectorAll(
+        ".sidebar-nav .nav-item[href^='#']"
+      )
+    );
+
+  function activateSection(hash) {
+
+    let target =
+      (hash || "").replace("#", "");
+
+    if (!target) {
+      target = "dashboard";
+    }
+
+    const section =
+      document.getElementById(target);
+
+    /*
+     * If a navbar target does not exist, fall back
+     * to the dashboard instead of leaving the page blank.
+     */
+    if (!section) {
+      target = "dashboard";
+    }
+
+    sections.forEach(function (item) {
+
+      item.style.display =
+        item.id === target
+          ? ""
+          : "none";
+
+    });
+
+    navItems.forEach(function (item) {
+
+      const itemHash =
+        item.getAttribute("href");
+
+      item.classList.toggle(
+        "active",
+        itemHash === "#" + target
+      );
+
+    });
+
+    const activeSection =
+      document.getElementById(target);
+
+    if (activeSection) {
+
+      activeSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+  }
+
+  navItems.forEach(function (item) {
+
+    item.addEventListener(
+      "click",
+      function () {
+
+        const hash =
+          item.getAttribute("href");
+
+        if (hash) {
+          activateSection(hash);
+        }
+
+      }
+    );
+
+  });
+
+  window.addEventListener(
+    "hashchange",
+    function () {
+      activateSection(
+        window.location.hash
+      );
+    }
+  );
+
+  activateSection(
+    window.location.hash
+  );
+
+})();
+
+/* =====================================================
+   LANGUAGE
+====================================================== */
+
+const languageSelect =
+  document.getElementById(
+    "languageSelect"
+  );
+
+
+if (languageSelect) {
+
+  const savedLanguage =
+    localStorage.getItem(
+      "taskora_language"
+    );
+
+
+  if (savedLanguage) {
+
+    languageSelect.value =
+      savedLanguage;
+
+  }
+
+
+  languageSelect.addEventListener(
+    "change",
+    function () {
+
+      localStorage.setItem(
+        "taskora_language",
+        this.value
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SEARCH
+====================================================== */
+
+const taskSearch =
+  document.getElementById(
+    "taskSearch"
+  );
+
+
+if (taskSearch) {
+
+  taskSearch.addEventListener(
+    "input",
+    function () {
+
+      const query =
+        this.value
+          .trim()
+          .toLowerCase();
+
+
+      document
+        .querySelectorAll(
+          "#tasks .task-card"
+        )
+        .forEach(
+          function (card) {
+
+            const text =
+              card.textContent
+                .toLowerCase();
+
+
+            card.style.display =
+              !query ||
+              text.includes(query)
+                ? ""
+                : "none";
+
+          }
+        );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   LOAD LINKED ACCOUNTS
+====================================================== */
+
+loadLinkedAccounts();
+</script>
+</body>
+</html>
+
+<style>
+.tasks-page-logo,
+.logo {
+  color: #111827 !important;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.logo span {
+  color: #4f46e5 !important;
+}
+</style>
+
+<style>
+/* Fix sidebar logo visibility in dark theme */
+html[data-theme="dark"] .sidebar .logo,
+html[data-theme="dark"] .sidebar .logo span {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar .logo span {
+  color: #8b5cf6 !important;
+}
+</style>
+
+
+
+

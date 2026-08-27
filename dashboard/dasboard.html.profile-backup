@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Worker Dashboard — TASKORA</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/style.css"
+  >
+
+
+<style id="taskora-withdrawal-beautify">
+.withdrawal-card{
+  background:linear-gradient(145deg,#ffffff,#f8fbff);
+  border:1px solid #e7edf5;
+  border-radius:20px;
+  padding:24px;
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+}
+.withdrawal-card h2,.withdrawal-card h3{margin-bottom:8px}
+.withdrawal-card .withdraw-subtitle{
+  color:#64748b;margin-bottom:22px;font-size:14px
+}
+.withdrawal-balance{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 20px;margin-bottom:20px;border-radius:16px;
+  background:linear-gradient(135deg,#eff6ff,#f0fdf4);
+  border:1px solid #dbeafe
+}
+.withdrawal-balance span{color:#64748b;font-size:13px}
+.withdrawal-balance strong{display:block;font-size:25px;color:#0f172a;margin-top:4px}
+.withdrawal-form{display:grid;gap:14px}
+.withdrawal-form input,.withdrawal-form select{
+  width:100%;padding:13px 14px;border:1px solid #dbe3ee;
+  border-radius:12px;background:#fff;font-size:14px;outline:none;
+  transition:.2s
+}
+.withdrawal-form input:focus,.withdrawal-form select:focus{
+  border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12)
+}
+.withdrawal-history{
+  margin-top:22px;border-top:1px solid #edf1f6;padding-top:18px
+}
+.withdrawal-status{
+  display:inline-flex;padding:5px 10px;border-radius:999px;
+  font-size:12px;font-weight:600
+}
+.withdrawal-status.pending{background:#fff7ed;color:#c2410c}
+.withdrawal-status.approved{background:#ecfdf5;color:#047857}
+.withdrawal-status.rejected{background:#fef2f2;color:#b91c1c}
+</style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<div class="app-shell">
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="sidebar-header">
+
+      <a
+        class="logo"
+        href="../index.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-item active" href="#dashboard">
+        <span>🏠</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" href="#tasks">
+        <span>📋</span>
+        <span>Find Tasks</span>
+      </a>
+
+      <a class="nav-item" href="#submissions">
+        <span>📝</span>
+        <span>My Submissions</span>
+      </a>
+
+      <a class="nav-item" href="#results">
+        <span>📊</span>
+        <span>Results</span>
+      </a>
+
+      <a class="nav-item" href="#earnings">
+        <span>💰</span>
+        <span>Earnings</span>
+      </a>
+
+      <a class="nav-item" href="#withdrawals">
+        <span>💳</span>
+        <span>Withdrawals</span>
+      </a>
+
+      <a class="nav-item" href="#orders">
+        <span>🛒</span>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" href="#accounts">
+        <span>🔗</span>
+        <span>Linked Accounts</span>
+      </a>
+
+      <a class="nav-item" href="#notifications">
+        <span>🔔</span>
+        <span>Notifications</span>
+        <span class="notification-badge">3</span>
+      </a>
+
+      <a class="nav-item" href="#profile">
+        <span>👤</span>
+        <span>Profile</span>
+      </a>
+
+      <a class="nav-item" href="#faq">
+        <span>❓</span>
+        <span>FAQ</span>
+      </a>
+
+      <a class="nav-item" href="#support">
+        <span>🆘</span>
+        <span>Support</span>
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+        <span>🚪</span>
+        <span>Sign Out</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    id="sidebarOverlay"
+    class="sidebar-overlay"
+  ></div>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main-content">
+
+
+    <!-- HEADER -->
+
+    <header class="dashboard-header">
+
+      <button
+        id="menuButton"
+        class="menu-button"
+        type="button"
+        aria-label="Open menu"
+      >
+        ☰
+      </button>
+
+
+      <div class="header-search">
+
+        <input
+          type="search"
+          id="taskSearch"
+          placeholder="Search tasks..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <select
+          id="languageSelect"
+          class="language-select"
+          aria-label="Language"
+        >
+
+          <option value="en">🌐 EN</option>
+          <option value="ur">اردو</option>
+          <option value="ar">العربية</option>
+          <option value="de">DE</option>
+          <option value="fr">FR</option>
+
+        </select>
+
+
+        <button
+          class="header-icon"
+          type="button"
+          aria-label="Notifications"
+        >
+          🔔
+          <span class="header-notification-dot"></span>
+        </button>
+
+
+        <button
+          class="profile-button"
+          type="button"
+        >
+          <span class="avatar">W</span>
+          <span class="profile-name">Worker</span>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section
+      id="dashboard"
+      class="dashboard-content"
+    >
+
+
+      <!-- PAGE HEADING -->
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            WORKER AREA
+          </span>
+
+          <h1>Dashboard</h1>
+
+          <p>
+            Welcome back. Find your next task and start earning.
+          </p>
+
+        </div>
+
+
+        <a
+          href="#tasks"
+          class="btn btn-primary"
+        >
+          Find Tasks
+        </a>
+
+      </div>
+
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon blue">$</div>
+
+          <div>
+
+            <span>Available Balance</span>
+
+            <strong id="dashboardAvailableBalance">
+              $45.20
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon orange">
+            ⏳
+          </div>
+
+          <div>
+
+            <span>Pending Balance</span>
+
+            <strong id="dashboardPendingBalance">
+              $12.40
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon green">
+            ↗
+          </div>
+
+          <div>
+
+            <span>Total Earnings</span>
+
+            <strong id="dashboardTotalEarnings">
+              $180.50
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon purple">
+            ✓
+          </div>
+
+          <div>
+
+            <span>Success Rate</span>
+
+            <strong>96%</strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           TASKS
+      ================================================== -->
+
+      <section
+        id="tasks"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Available Tasks</h2>
+
+            <p>
+              Tasks matching your profile.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-outline"
+            type="button"
+          >
+            View All
+          </button>
+
+        </div>
+
+
+        <div class="task-grid">
+
+
+          <article class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Follow
+              </span>
+
+              <span class="task-reward">
+                $0.40
+              </span>
+
+            </div>
+
+
+            <h3>
+              Follow Instagram Account
+            </h3>
+
+
+            <p>
+              Follow the specified account and submit proof
+              after completing the task.
+            </p>
+
+
+            <div class="task-meta">
+
+              <span>⏱ 2 min</span>
+              <span>👥 142 left</span>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary btn-full"
+              type="button"
+              onclick="startTask('Follow Instagram Account')"
+            >
+              Start Task
+            </button>
+
+          </article>
+
+
+          <article class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Survey
+              </span>
+
+              <span class="task-reward">
+                $0.75
+              </span>
+
+            </div>
+
+
+            <h3>
+              Customer Experience Survey
+            </h3>
+
+
+            <p>
+              Answer a short survey and provide honest feedback.
+            </p>
+
+
+            <div class="task-meta">
+
+              <span>⏱ 5 min</span>
+              <span>👥 80 left</span>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary btn-full"
+              type="button"
+              onclick="startTask('Customer Experience Survey')"
+            >
+              Start Task
+            </button>
+
+          </article>
+
+
+          <article class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Website Test
+              </span>
+
+              <span class="task-reward">
+                $1.20
+              </span>
+
+            </div>
+
+
+            <h3>
+              Test a Website
+            </h3>
+
+
+            <p>
+              Visit the website, test selected features and
+              submit your feedback.
+            </p>
+
+
+            <div class="task-meta">
+
+              <span>⏱ 8 min</span>
+              <span>👥 35 left</span>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary btn-full"
+              type="button"
+              onclick="startTask('Test a Website')"
+            >
+              Start Task
+            </button>
+
+          </article>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           SUBMISSIONS
+      ================================================== -->
+
+      <section
+        id="submissions"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Recent Submissions</h2>
+
+            <p>
+              Your latest task activity.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table">
+
+            <thead>
+
+              <tr>
+                <th>Task</th>
+                <th>Date</th>
+                <th>Reward</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr>
+
+                <td>Website Test</td>
+
+                <td>25 Aug 2026</td>
+
+                <td>$1.20</td>
+
+                <td>
+                  <span class="status status-pending">
+                    Pending
+                  </span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>Follow Account</td>
+
+                <td>24 Aug 2026</td>
+
+                <td>$0.40</td>
+
+                <td>
+                  <span class="status status-approved">
+                    Approved
+                  </span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>Survey</td>
+
+                <td>24 Aug 2026</td>
+
+                <td>$0.75</td>
+
+                <td>
+                  <span class="status status-rejected">
+                    Rejected
+                  </span>
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           RESULTS
+      ================================================== -->
+
+      <section
+        id="results"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Results</h2>
+
+            <p>
+              Your task approval and performance results.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="earnings-card">
+
+          <div>
+            <span>Approved</span>
+            <strong>42</strong>
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <strong>3</strong>
+          </div>
+
+          <div>
+            <span>Rejected</span>
+            <strong>2</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           EARNINGS
+      ================================================== -->
+
+      <section
+        id="earnings"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Earnings</h2>
+
+            <p>
+              Your recent earnings activity.
+            </p>
+
+          </div>
+
+
+          <a
+            href="#withdrawals"
+            class="btn btn-primary"
+          >
+            Withdraw
+          </a>
+
+        </div>
+
+
+        <div class="earnings-card">
+
+          <div>
+            <span>Total Earned</span>
+            <strong>$180.50</strong>
+          </div>
+
+          <div>
+            <span>Available</span>
+            <strong>$45.20</strong>
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <strong>$12.40</strong>
+          </div>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>
+            Task Reward Information
+          </h3>
+
+          <p>
+            Worker rewards are calculated from the task's
+            funded reward pool. TASKORA's configured platform
+            fee is 10%.
+          </p>
+
+
+          <div class="earnings-card">
+
+            <div>
+              <span>TASKORA Fee</span>
+              <strong>10%</strong>
+            </div>
+
+            <div>
+              <span>Worker Reward Pool</span>
+              <strong>90%</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           WITHDRAWALS
+      ================================================== -->
+
+      <section
+        id="withdrawals"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              PAYMENTS
+            </span>
+
+            <h2>Withdrawals</h2>
+<p class="withdraw-subtitle">Withdraw your available earnings securely and track every request.</p>
+
+            <p>
+              Request a withdrawal and track your payment status.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+
+            <div class="stat-icon blue">$</div>
+
+            <div>
+
+              <span>Available to Withdraw</span>
+
+              <strong id="withdrawAvailableBalance">
+                $0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon orange">
+              ⏳
+            </div>
+
+            <div>
+
+              <span>Minimum Withdrawal</span>
+
+              <strong>$5.00</strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>Request Withdrawal</h3>
+
+
+          <form id="withdrawalForm">
+
+            <div class="form-group">
+
+              <label for="withdrawAmount">
+                Amount
+              </label>
+
+              <input
+                id="withdrawAmount"
+                name="amount"
+                type="number"
+                min="5"
+                step="0.01"
+                placeholder="5.00"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="withdrawMethod">
+                Withdrawal Method
+              </label>
+
+              <select
+                id="withdrawMethod"
+                name="method"
+                required
+              >
+
+                <option value="">
+                  Select method
+                </option>
+
+                <option value="bank">
+                  Bank Transfer
+                </option>
+
+                <option value="paypal">
+                  PayPal
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="withdrawAccount">
+                Payment Account
+              </label>
+
+              <input
+                id="withdrawAccount"
+                name="account"
+                type="text"
+                placeholder="Enter your payment account"
+                autocomplete="off"
+                required
+              >
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Request Withdrawal
+            </button>
+
+
+            <div
+              id="withdrawalMessage"
+              hidden
+              style="margin-top:15px;"
+            ></div>
+
+          </form>
+
+        </div>
+
+
+        <div
+          class="dashboard-card"
+          style="margin-top:20px;"
+        >
+
+          <h3>Withdrawal History</h3>
+
+
+          <div class="table-wrapper">
+
+            <table class="data-table">
+
+              <thead>
+
+                <tr>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Account</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+
+              </thead>
+
+
+              <tbody id="withdrawalsTable">
+
+                <tr>
+
+                  <td colspan="5">
+                    Loading withdrawals...
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           ORDERS
+      ================================================== -->
+
+      <section
+        id="orders"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Orders</h2>
+
+            <p>
+              Your task-related orders and activities.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            No active orders.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           LINKED ACCOUNTS
+      ================================================== -->
+
+      <section
+        id="accounts"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <span class="eyebrow">
+              SOCIAL ACCOUNTS
+            </span>
+
+            <h2>
+              Linked Accounts
+            </h2>
+
+            <p>
+              Connect the social accounts you use for eligible
+              TASKORA tasks.
+            </p>
+
+          </div>
+
+
+          <strong id="linkedAccountsCount">
+            0 / 14
+          </strong>
+
+        </div>
+
+
+        <div
+          id="linkedAccountsList"
+          class="task-grid"
+        >
+
+
+          <!-- INSTAGRAM -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Instagram
+              </span>
+
+              <span>0 / 3</span>
+
+            </div>
+
+
+            <h3>Instagram</h3>
+
+            <p>
+              Link up to 3 Instagram accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('instagram')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+
+          <!-- TIKTOK -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                TikTok
+              </span>
+
+              <span>0 / 3</span>
+
+            </div>
+
+
+            <h3>TikTok</h3>
+
+            <p>
+              Link up to 3 TikTok accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('tiktok')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+
+          <!-- YOUTUBE -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                YouTube
+              </span>
+
+              <span>0 / 2</span>
+
+            </div>
+
+
+            <h3>YouTube</h3>
+
+            <p>
+              Link up to 2 YouTube accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('youtube')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+
+          <!-- FACEBOOK -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Facebook
+              </span>
+
+              <span>0 / 2</span>
+
+            </div>
+
+
+            <h3>Facebook</h3>
+
+            <p>
+              Link up to 2 Facebook accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('facebook')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+
+          <!-- X -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                X
+              </span>
+
+              <span>0 / 2</span>
+
+            </div>
+
+
+            <h3>X</h3>
+
+            <p>
+              Link up to 2 X accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('x')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+
+          <!-- OTHER -->
+
+          <div class="task-card">
+
+            <div class="task-card-top">
+
+              <span class="task-category">
+                Other
+              </span>
+
+              <span>0 / 2</span>
+
+            </div>
+
+
+            <h3>Other</h3>
+
+            <p>
+              Link up to 2 other social accounts.
+            </p>
+
+
+            <button
+              type="button"
+              class="btn btn-primary btn-full"
+              onclick="addSocialAccount('other')"
+            >
+              Add Account
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           NOTIFICATIONS
+      ================================================== -->
+
+      <section
+        id="notifications"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Notifications</h2>
+
+            <p>
+              Your latest TASKORA notifications.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            You have 3 new notifications.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           PROFILE
+      ================================================== -->
+
+      <section
+        id="profile"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Profile</h2>
+
+            <p>
+              Manage your worker profile.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            Worker profile settings.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           FAQ
+      ================================================== -->
+
+      <section
+        id="faq"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>FAQ</h2>
+
+            <p>
+              Frequently asked questions.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <h3>
+            How do worker rewards work?
+          </h3>
+
+          <p>
+            A trusted user funds a task. TASKORA applies the
+            configured platform fee, and the remaining amount
+            forms the worker reward pool.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           SUPPORT
+      ================================================== -->
+
+      <section
+        id="support"
+        class="dashboard-section"
+      >
+
+        <div class="section-toolbar">
+
+          <div>
+
+            <h2>Support</h2>
+
+            <p>
+              Need help with your TASKORA account?
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <p>
+            Contact TASKORA support for assistance.
+          </p>
+
+        </div>
+
+      </section>
+
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SCRIPTS
+====================================================== -->
+
+<script src="../assets/js/config.js"></script>
+
+<script src="../assets/js/auth.js"></script>
+
+<script src="../assets/js/withdrawals.js"></script>
+
+
+<script>
+
+"use strict";
+
+
+/* =====================================================
+   CONSTANTS
+====================================================== */
+
+const TASKORA_MAX_LINKED_ACCOUNTS = 14;
+
+
+/* =====================================================
+   TASK START
+====================================================== */
+
+function startTask(taskName) {
+
+  alert(
+    "Starting task: " +
+    taskName +
+    "\n\n" +
+    "The task workflow will be connected to the backend."
+  );
+
+}
+
+
+/* =====================================================
+   SOCIAL ACCOUNTS
+====================================================== */
+
+async function addSocialAccount(platform) {
+
+  const accountName = prompt(
+    "Enter your " +
+    platform +
+    " username or account name:"
+  );
+
+
+  if (!accountName) {
+    return;
+  }
+
+
+  const cleanName =
+    accountName.trim();
+
+
+  if (!cleanName) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        credentials: "include",
+
+        body: JSON.stringify({
+          platform: platform,
+          accountName: cleanName
+        })
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      alert(
+        data.message ||
+        "Unable to link this account."
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Account linked successfully.\n\n" +
+      "Status: Pending verification"
+    );
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Link account error:",
+      error
+    );
+
+
+    alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+async function loadLinkedAccounts() {
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts`,
+      {
+        method: "GET",
+        credentials: "include"
+      }
+    );
+
+
+    if (!response.ok) {
+      return;
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const accounts =
+      Array.isArray(data.accounts)
+        ? data.accounts
+        : [];
+
+
+    const countElement =
+      document.getElementById(
+        "linkedAccountsCount"
+      );
+
+
+    if (countElement) {
+
+      countElement.textContent =
+        `${accounts.length} / ${TASKORA_MAX_LINKED_ACCOUNTS}`;
+
+    }
+
+
+    renderLinkedAccounts(accounts);
+
+  } catch (error) {
+
+    console.error(
+      "Load linked accounts error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderLinkedAccounts(accounts) {
+
+  const list =
+    document.getElementById(
+      "linkedAccountsList"
+    );
+
+
+  if (!list) {
+    return;
+  }
+
+
+  const limits = {
+
+    instagram: 3,
+    tiktok: 3,
+    youtube: 2,
+    facebook: 2,
+    x: 2,
+    other: 2
+
+  };
+
+
+  const counts = {};
+
+
+  accounts.forEach(
+    function (account) {
+
+      counts[account.platform] =
+        (counts[account.platform] || 0) + 1;
+
+    }
+  );
+
+
+  const platforms = [
+    "instagram",
+    "tiktok",
+    "youtube",
+    "facebook",
+    "x",
+    "other"
+  ];
+
+
+  list
+    .querySelectorAll(".task-card")
+    .forEach(
+      function (card, index) {
+
+        const platform =
+          platforms[index];
+
+
+        if (!platform) {
+          return;
+        }
+
+
+        const count =
+          counts[platform] || 0;
+
+
+        const limit =
+          limits[platform];
+
+
+        const counter =
+          card.querySelector(
+            ".task-card-top span:last-child"
+          );
+
+
+        if (counter) {
+
+          counter.textContent =
+            `${count} / ${limit}`;
+
+        }
+
+
+        const button =
+          card.querySelector(
+            "button"
+          );
+
+
+        if (button) {
+
+          button.disabled =
+            count >= limit;
+
+
+          button.textContent =
+            count >= limit
+              ? "Limit Reached"
+              : "Add Account";
+
+        }
+
+      }
+    );
+
+
+  const existingAccounts =
+    list.querySelector(
+      ".linked-account-results"
+    );
+
+
+  if (existingAccounts) {
+
+    existingAccounts.remove();
+
+  }
+
+
+  if (accounts.length === 0) {
+    return;
+  }
+
+
+  const results =
+    document.createElement("div");
+
+
+  results.className =
+    "linked-account-results";
+
+
+  results.style.gridColumn =
+    "1 / -1";
+
+
+  results.innerHTML = `
+    <div class="dashboard-card">
+
+      <h3>My Linked Accounts</h3>
+
+      <div class="table-wrapper">
+
+        <table class="data-table">
+
+          <thead>
+
+            <tr>
+              <th>Platform</th>
+              <th>Account</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${accounts.map(
+              function (account) {
+
+                return `
+                  <tr>
+
+                    <td>
+                      ${escapeHtml(
+                        account.platform
+                      )}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(
+                        account.account_name
+                      )}
+                    </td>
+
+                    <td>
+
+                      <span class="status status-pending">
+                        ${escapeHtml(
+                          account.verification_status
+                        )}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <button
+                        type="button"
+                        class="btn btn-outline"
+                        onclick="removeSocialAccount(${Number(account.id)})"
+                      >
+                        Remove
+                      </button>
+
+                    </td>
+
+                  </tr>
+                `;
+
+              }
+            ).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+  `;
+
+
+  list.appendChild(results);
+
+}
+
+
+async function removeSocialAccount(accountId) {
+
+  const confirmed =
+    confirm(
+      "Remove this linked account?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${TASKORA_API_URL}/social-accounts/${accountId}`,
+      {
+        method: "DELETE",
+        credentials: "include"
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      alert(
+        data.message ||
+        "Unable to remove account."
+      );
+
+      return;
+
+    }
+
+
+    await loadLinkedAccounts();
+
+  } catch (error) {
+
+    console.error(
+      "Remove account error:",
+      error
+    );
+
+
+    alert(
+      "Unable to connect to TASKORA server."
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   SIDEBAR
+====================================================== */
+
+const sidebar =
+  document.getElementById("sidebar");
+
+
+const menuButton =
+  document.getElementById("menuButton");
+
+
+const sidebarClose =
+  document.getElementById("sidebarClose");
+
+
+const sidebarOverlay =
+  document.getElementById("sidebarOverlay");
+
+
+function openSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.add("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.add("active");
+
+  }
+
+}
+
+
+function closeSidebar() {
+
+  if (sidebar) {
+
+    sidebar.classList.remove("open");
+
+  }
+
+
+  if (sidebarOverlay) {
+
+    sidebarOverlay.classList.remove("active");
+
+  }
+
+}
+
+
+if (menuButton) {
+
+  menuButton.addEventListener(
+    "click",
+    openSidebar
+  );
+
+}
+
+
+if (sidebarClose) {
+
+  sidebarClose.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+if (sidebarOverlay) {
+
+  sidebarOverlay.addEventListener(
+    "click",
+    closeSidebar
+  );
+
+}
+
+
+document
+  .querySelectorAll(
+    ".sidebar-nav .nav-item"
+  )
+  .forEach(
+    function (item) {
+
+      item.addEventListener(
+        "click",
+        closeSidebar
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   LANGUAGE
+====================================================== */
+
+const languageSelect =
+  document.getElementById(
+    "languageSelect"
+  );
+
+
+if (languageSelect) {
+
+  const savedLanguage =
+    localStorage.getItem(
+      "taskora_language"
+    );
+
+
+  if (savedLanguage) {
+
+    languageSelect.value =
+      savedLanguage;
+
+  }
+
+
+  languageSelect.addEventListener(
+    "change",
+    function () {
+
+      localStorage.setItem(
+        "taskora_language",
+        this.value
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SEARCH
+====================================================== */
+
+const taskSearch =
+  document.getElementById(
+    "taskSearch"
+  );
+
+
+if (taskSearch) {
+
+  taskSearch.addEventListener(
+    "input",
+    function () {
+
+      const query =
+        this.value
+          .trim()
+          .toLowerCase();
+
+
+      document
+        .querySelectorAll(
+          "#tasks .task-card"
+        )
+        .forEach(
+          function (card) {
+
+            const text =
+              card.textContent
+                .toLowerCase();
+
+
+            card.style.display =
+              !query ||
+              text.includes(query)
+                ? ""
+                : "none";
+
+          }
+        );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   LOAD LINKED ACCOUNTS
+====================================================== */
+
+loadLinkedAccounts();
+
+</script>
+
+
+<script>
+  requireLogin();
+</script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/withdrawals.js"></script>
+</body>
+
+</html>

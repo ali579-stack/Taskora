@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../assets/js/theme.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profile — TASKORA</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+body{background:#f5f7fb}
+.profile-wrap{max-width:850px;margin:40px auto;padding:20px}
+.profile-card{background:#fff;border:1px solid #e7edf5;border-radius:22px;padding:30px;box-shadow:0 12px 35px rgba(15,23,42,.07)}
+.profile-head{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+.avatar-big{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:28px;font-weight:700}
+.profile-head h1{margin:0 0 5px}.muted{color:#64748b}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{padding:16px;border:1px solid #e8edf3;border-radius:14px;background:#fafcff}
+.field label{display:block;color:#64748b;font-size:12px;margin-bottom:7px}
+.field strong{font-size:15px;color:#172033}
+.back{display:inline-block;margin-bottom:18px;color:#4f46e5;text-decoration:none;font-weight:600}
+@media(max-width:650px){.profile-grid{grid-template-columns:1fr}.profile-card{padding:20px}}
+</style>
+
+<style>
+.profile-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.profile-card:first-of-type::before{
+  content:"";
+  position:absolute;
+  top:-90px;
+  right:-70px;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(124,58,237,.04));
+  pointer-events:none;
+}
+
+.profile-head{
+  position:relative;
+  padding:8px 4px 24px;
+  border-bottom:1px solid #edf1f7;
+}
+
+.profile-head h1{
+  font-size:27px;
+  letter-spacing:-.5px;
+}
+
+.avatar-big{
+  width:82px;
+  height:82px;
+  border:4px solid #fff;
+  box-shadow:0 10px 25px rgba(79,70,229,.25);
+}
+
+.field{
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+.field:hover{
+  transform:translateY(-2px);
+  border-color:#dbe3f0;
+  box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+
+.status-dot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  margin-right:6px;
+  border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 4px rgba(34,197,94,.12);
+}
+
+#profile-linked-accounts h2{
+  margin-top:0;
+  margin-bottom:6px;
+  font-size:21px;
+}
+
+</style>
+<style>
+.social-group{
+  margin-top:20px;
+  padding:18px;
+  border:1px solid #e7edf5;
+  border-radius:16px;
+  background:#fafcff;
+}
+.social-group-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.social-group-head h3{margin:0}
+.social-group-head span{
+  color:#64748b;
+  font-size:13px;
+}
+.social-slot{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  margin-top:9px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #e8edf3;
+}
+.social-slot div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.social-slot span{
+  color:#64748b;
+  font-size:13px;
+}
+.social-slot button{
+  border:0;
+  border-radius:9px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-weight:600;
+}
+.social-slot.empty button{
+  background:#eef2ff;
+  color:#4338ca;
+}
+.social-slot.filled button{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+</style>
+
+<style>
+:root{
+  --profile-bg:#f5f7fb;
+  --profile-card:#fff;
+  --profile-field:#fafcff;
+  --profile-border:#e7edf5;
+  --profile-text:#172033;
+  --profile-muted:#64748b;
+}
+
+html[data-theme="dark"]{
+  --profile-bg:#0f172a;
+  --profile-card:#182235;
+  --profile-field:#202c40;
+  --profile-border:#334155;
+  --profile-text:#f1f5f9;
+  --profile-muted:#94a3b8;
+}
+
+body{
+  background:var(--profile-bg) !important;
+  color:var(--profile-text);
+}
+
+.profile-card{
+  background:var(--profile-card) !important;
+  border-color:var(--profile-border) !important;
+}
+
+.field,
+.social-group{
+  background:var(--profile-field) !important;
+  border-color:var(--profile-border) !important;
+}
+
+.field strong{
+  color:var(--profile-text);
+}
+
+.muted,
+.social-slot span,
+.field label{
+  color:var(--profile-muted);
+}
+
+.profile-head{
+  border-color:var(--profile-border);
+}
+
+.social-slot{
+  background:var(--profile-card);
+  border-color:var(--profile-border);
+}
+
+
+</style>
+<style>
+
+/* =========================================================
+   TASKORA — UNIFIED AUTHENTICATED TOP BAR
+   ========================================================= */
+
+.taskora-topbar,
+header.header,
+.dashboard-header,
+.main-header {
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  border-bottom: 1px solid var(--border, #e7ebf3);
+  display: flex;
+  align-items: center;
+}
+
+.taskora-topbar .logo,
+header.header .logo {
+  color: var(--text, #172033);
+}
+
+.taskora-topbar .header-actions,
+header.header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskora-topbar .theme-toggle,
+header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border, #e7ebf3);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  color: var(--text, #172033);
+  cursor: pointer;
+}
+
+.taskora-topbar .theme-toggle svg,
+header.header .theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2;
+}
+
+.taskora-topbar .theme-toggle:hover,
+header.header .theme-toggle:hover {
+  color: var(--primary, #5b5ce2);
+  border-color: var(--primary, #5b5ce2);
+}
+
+html[data-theme="dark"] .taskora-topbar,
+html[data-theme="dark"] header.header,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .main-header {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+html[data-theme="dark"] .taskora-topbar .theme-toggle,
+html[data-theme="dark"] header.header .theme-toggle {
+  background: var(--surface, #111827);
+  color: var(--text, #f8fafc);
+  border-color: var(--border, #26324a);
+}
+
+@media (max-width: 700px) {
+  .taskora-topbar,
+  header.header,
+  .dashboard-header,
+  .main-header {
+    min-height: 58px;
+  }
+}
+
+</style>
+  <script src="../assets/js/popups.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/icons.js"></script>
+</head>
+<body>
+<aside id="sidebar" class="sidebar">
+
+    <div class="sidebar-header">
+
+      <a
+        class="logo"
+        href="../index.html"
+      >
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-item" href="dashboard.html#dashboard">
+        <span><i data-lucide="house"></i></span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#submissions">
+        <span><i data-lucide="clipboard-pen"></i></span>
+        <span>My Submissions</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#results">
+        <span><i data-lucide="chart-column"></i></span>
+        <span>Results</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#earnings">
+        <span><i data-lucide="wallet"></i></span>
+        <span>Earnings</span>
+      </a>
+
+      <a class="nav-item" href="tasks.html">
+        <span><i data-lucide="clipboard-list"></i></span>
+        <span>Find Tasks</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#withdrawals">
+        <span><i data-lucide="credit-card"></i></span>
+        <span>Withdrawals</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#orders">
+        <span><i data-lucide="shopping-cart"></i></span>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#notifications">
+        <span><i data-lucide="bell"></i></span>
+        <span>Notifications</span>
+        <span class="notification-badge">3</span>
+      </a>
+
+      <a class="nav-item active" href="profile.html">
+        <span><i data-lucide="user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#faq">
+        <span><i data-lucide="circle-help"></i></span>
+        <span>FAQ</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#support">
+        <span><i data-lucide="life-buoy"></i></span>
+        <span>Support</span>
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+        <span><i data-lucide="log-out"></i></span>
+        <span>Sign Out</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    id="sidebarOverlay"
+    class="sidebar-overlay"
+  ></div>
+
+<header class="dashboard-header profile-topbar">
+
+  <div class="header-left">
+    <button
+      id="menuButton"
+      class="menu-button"
+      type="button"
+      aria-label="Open menu"
+    >
+      <i data-lucide="menu"></i>
+    </button>
+
+    <div class="header-page-title">
+      <strong>Profile</strong>
+    </div>
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Toggle theme"
+    >
+      <i data-lucide="moon"></i>
+    </button>
+
+    <select
+      id="languageSelect"
+      class="language-select"
+      aria-label="Language"
+    >
+      <option value="en">EN</option>
+      <option value="ur">اردو</option>
+      <option value="ar">العربية</option>
+      <option value="de">DE</option>
+      <option value="fr">FR</option>
+    </select>
+
+    <button
+      class="header-icon"
+      type="button"
+      aria-label="Notifications"
+    >
+      <i data-lucide="bell"></i>
+      <span class="header-notification-dot"></span>
+    </button>
+
+  </div>
+
+</header>
+
+<main class="profile-wrap">
+<a class="back" href="dashboard.html">← Back to Dashboard</a>
+
+<section class="profile-card">
+<div class="profile-head">
+<div class="avatar-big" id="profileAvatar">W</div>
+<div>
+<h1 id="profileName">Worker</h1>
+<div class="muted" id="profileRole">Worker Account</div>
+</div>
+</div>
+
+<div class="profile-grid">
+<div class="field">
+<label>FULL NAME</label>
+<strong id="profileFullName">Loading...</strong>
+</div>
+
+<div class="field">
+<label>EMAIL</label>
+<strong id="profileEmail">Loading...</strong>
+</div>
+
+<div class="field">
+<label>ACCOUNT ROLE</label>
+<strong id="profileRoleValue">Loading...</strong>
+</div>
+
+<div class="field">
+<label>ACCOUNT STATUS</label>
+<strong><span class="status-dot"></span> Active</strong>
+</div>
+
+<div class="field">
+<label>MEMBER SINCE</label>
+<strong id="profileJoined">Loading...</strong>
+</div>
+
+<div class="field">
+<label>USER ID</label>
+<strong id="profileUserId">Loading...</strong>
+</div>
+</div>
+</section>
+
+
+<section class="profile-card" id="profile-linked-accounts" style="margin-top:22px">
+  <h2>Linked Social Accounts</h2>
+  <p class="muted">Connect your accounts. Each platform has its own available slots.</p>
+
+  <div id="socialSlotGroups"></div>
+
+  <div id="accountMessage" class="muted" style="margin-top:16px"></div>
+</section>
+
+
+</main>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+(async function () {
+  try {
+    const localUser = JSON.parse(
+      localStorage.getItem("taskora_user") ||
+      localStorage.getItem("user") ||
+      "{}"
+    );
+
+    let user = localUser;
+
+    try {
+      const response = await taskoraApi("/me", { method: "GET" });
+
+      if (response?.success && response.user) {
+        user = response.user;
+
+        localStorage.setItem(
+          "taskora_user",
+          JSON.stringify(response.user)
+        );
+      }
+    } catch (apiError) {
+      console.warn("Profile API unavailable, using local user:", apiError);
+    }
+
+    const name = user.name || "Worker";
+    const email = user.email || "—";
+    const role = user.role || "worker";
+
+    const created = user.created_at
+      ? new Date(user.created_at).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        })
+      : "—";
+
+    const prettyRole = role
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+    const avatar = name.trim().charAt(0).toUpperCase() || "W";
+
+    document.getElementById("profileAvatar").textContent = avatar;
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileFullName").textContent = name;
+    document.getElementById("profileEmail").textContent = email;
+    document.getElementById("profileRole").textContent = prettyRole + " Account";
+    document.getElementById("profileRoleValue").textContent = prettyRole;
+
+    const joined = document.getElementById("profileJoined");
+    if (joined) joined.textContent = created;
+
+    const userId = document.getElementById("profileUserId");
+    if (userId) userId.textContent = user.id ? "#" + user.id : "—";
+
+  } catch (error) {
+    console.error("Profile loading error:", error);
+  }
+})();
+</script>
+
+
+
+
+<script>
+(function () {
+  const limits = {
+    instagram: 3,
+    tiktok: 3,
+    youtube: 2,
+    facebook: 2,
+    x: 2,
+    other: 2
+  };
+
+  const labels = {
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    youtube: "YouTube",
+    facebook: "Facebook",
+    x: "X",
+    other: "Other"
+  };
+
+  const list = document.getElementById("socialSlotGroups");
+  const message = document.getElementById("accountMessage");
+
+  function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[c]));
+  }
+
+  function show(v) {
+    message.textContent = v || "";
+  }
+
+  async function loadAccounts() {
+    try {
+      const response = await taskoraApi("/social-accounts");
+      const accounts = Array.isArray(response?.accounts)
+        ? response.accounts
+        : [];
+
+      list.innerHTML = Object.keys(limits).map(platform => {
+        const mine = accounts.filter(a =>
+          String(a.platform || "").toLowerCase() === platform
+        );
+
+        let slots = "";
+
+        for (let i = 0; i < limits[platform]; i++) {
+          const account = mine[i];
+
+          if (account) {
+            slots += `
+              <div class="social-slot filled">
+                <div>
+                  <strong>Slot ${i + 1}</strong>
+                  <span>${esc(account.account_name || "")}</span>
+                </div>
+                <button type="button"
+                  onclick="removeSocialAccount(${Number(account.id)})">
+                  Remove
+                </button>
+              </div>`;
+          } else {
+            slots += `
+              <div class="social-slot empty">
+                <div>
+                  <strong>Slot ${i + 1}</strong>
+                  <span>Available</span>
+                </div>
+                <button type="button"
+                  onclick="addSocialAccount('${platform}')">
+                  + Add Account
+                </button>
+              </div>`;
+          }
+        }
+
+        return `
+          <div class="social-group">
+            <div class="social-group-head">
+              <h3>${labels[platform]}</h3>
+              <span>${mine.length} / ${limits[platform]}</span>
+            </div>
+            ${slots}
+          </div>`;
+      }).join("");
+
+      show("");
+
+    } catch (e) {
+      console.error("Linked accounts error:", e);
+      show(e.message || "Unable to load linked accounts.");
+    }
+  }
+
+  window.addSocialAccount = async function(platform) {
+    const name = prompt(
+      "Enter your " + labels[platform] + " username or account name:"
+    );
+
+    if (!name?.trim()) return;
+
+    try {
+      const response = await taskoraApi("/social-accounts", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          platform,
+          accountName: name.trim()
+        })
+      });
+
+      if (!response?.success)
+        throw new Error(response?.message || "Unable to add account.");
+
+      show("Account added successfully.");
+      loadAccounts();
+
+    } catch (e) {
+      show(e.message || "Unable to add account.");
+    }
+  };
+
+  window.removeSocialAccount = async function(id) {
+    if (!(await TaskoraPopup.confirm("Remove this linked account?"))) return;
+
+    try {
+      const response = await taskoraApi(
+        "/social-accounts/" + id,
+        {method:"DELETE"}
+      );
+
+      if (!response?.success)
+        throw new Error(response?.message || "Unable to remove account.");
+
+      show("Account removed.");
+      loadAccounts();
+
+    } catch (e) {
+      show(e.message || "Unable to remove account.");
+    }
+  };
+
+  loadAccounts();
+})();
+</script>
+
+
+
+
+
+<script>
+(function () {
+  const sidebar = document.getElementById("sidebar");
+  const menuButton = document.getElementById("menuButton");
+  const sidebarClose = document.getElementById("sidebarClose");
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add("open");
+    if (sidebarOverlay) sidebarOverlay.classList.add("active");
+  }
+
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove("open");
+    if (sidebarOverlay) sidebarOverlay.classList.remove("active");
+  }
+
+  if (menuButton) menuButton.addEventListener("click", openSidebar);
+  if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+  if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
+
+  document.querySelectorAll(".sidebar-nav .nav-item").forEach(function (item) {
+    item.addEventListener("click", closeSidebar);
+  });
+})();
+</script>
+
+</body>
+</html>
