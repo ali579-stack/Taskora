@@ -51,7 +51,7 @@ function getCurrentUser() {
 }
 async function loginUser(email, password) {
   const response = await fetch(
-    `${TASKORA_API_URL}/login`,
+    `${TASKORA_API_URL}/api/login`,
     {
       method: "POST",
       headers: {
@@ -87,7 +87,7 @@ async function loginUser(email, password) {
 
 async function registerUser(name, email, password) {
   const response = await fetch(
-    `${TASKORA_API_URL}/register`,
+    `${TASKORA_API_URL}/api/register`,
     {
       method: "POST",
 

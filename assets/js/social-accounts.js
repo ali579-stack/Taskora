@@ -146,16 +146,10 @@ async function addSocialAccount(platform) {
 
   try {
 
-    const response = await fetch(
-      `${TASKORA_API_URL}/social-accounts`,
+    const data = await taskoraApi(
+      "/social-accounts",
       {
         method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        credentials: "include",
 
         body: JSON.stringify({
           platform: platform,
@@ -163,18 +157,6 @@ async function addSocialAccount(platform) {
         })
       }
     );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-
-      TaskoraPopup.alert(
-        data.message ||
-        "Unable to add account."
-      );
-
-      return;
-    }
 
     TaskoraPopup.alert(
       data.message ||
@@ -187,39 +169,36 @@ async function addSocialAccount(platform) {
 
     console.error(error);
 
-    TaskoraPopup.alert("Unable to connect to server.");
+    TaskoraPopup.alert(
+      error.message ||
+      "Unable to connect to server."
+    );
 
   }
 }
 
-
 async function deleteSocialAccount(id) {
 
-  if (!(await TaskoraPopup.confirm("Remove this linked account?"))) {
+  if (
+    !(await TaskoraPopup.confirm(
+      "Remove this linked account?"
+    ))
+  ) {
     return;
   }
 
   try {
 
-    const response = await fetch(
-      `${TASKORA_API_URL}/social-accounts/${id}`,
+    const data = await taskoraApi(
+      `/social-accounts/${id}`,
       {
-        method: "DELETE",
-        credentials: "include"
+        method: "DELETE"
       }
     );
 
-    const data = await response.json();
-
-    if (!response.ok) {
-
-      TaskoraPopup.alert(
-        data.message ||
-        "Unable to remove account."
-      );
-
-      return;
-    }
+    TaskoraPopup.success(
+      data.message || "Account removed successfully."
+    );
 
     loadSocialAccounts();
 
@@ -227,25 +206,9 @@ async function deleteSocialAccount(id) {
 
     console.error(error);
 
-    TaskoraPopup.alert("Unable to connect to server.");
-
+    TaskoraPopup.error(
+      error.message ||
+      "Unable to remove account."
+    );
   }
 }
-
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-document.addEventListener(
-  "DOMContentLoaded",
-  loadSocialAccounts
-);
