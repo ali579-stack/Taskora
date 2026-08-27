@@ -14,7 +14,7 @@
 
   const TASKORA_FEE_RATE = 0.10;
 
-  const CURRENCY = "€";
+  const CURRENCY = "$";
 
 
   /* =======================================================
@@ -105,9 +105,9 @@
 
       Example:
 
-      Funding       €100
-      Fee 10%        €10
-      Worker pool    €90
+      Funding       \$100
+      Fee 10%        \$10
+      Worker pool    \$90
     */
 
     const fee =

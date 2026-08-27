@@ -6,8 +6,8 @@
 
 const TASKORA_API_URL = "/api";
 
-const TASKORA_CURRENCY = "EUR";
-const TASKORA_CURRENCY_SYMBOL = "€";
+const TASKORA_CURRENCY = "USD";
+const TASKORA_CURRENCY_SYMBOL = "$";
 
 const TASKORA_FEE_RATE = 0.10;
 

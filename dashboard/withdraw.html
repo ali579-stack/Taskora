@@ -614,7 +614,98 @@ html[data-theme="dark"] #withdrawals select {
 </head>
 <body class="dashboard-page">
 
-<main class="main-content">
+
+<div class="app-shell">
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <a class="logo" href="../index.html">
+        TASK<span>ORA</span>
+      </a>
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="Close menu"
+      >×</button>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-item" href="dashboard.html">
+        <span><i data-lucide="house"></i></span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#submissions">
+        <span><i data-lucide="clipboard-pen"></i></span>
+        <span>My Submissions</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#results">
+        <span><i data-lucide="chart-column"></i></span>
+        <span>Results</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#earnings">
+        <span><i data-lucide="wallet"></i></span>
+        <span>Earnings</span>
+      </a>
+
+      <a class="nav-item" href="tasks.html">
+        <span><i data-lucide="clipboard-list"></i></span>
+        <span>Find Tasks</span>
+      </a>
+
+      <a class="nav-item active" href="withdraw.html">
+        <span><i data-lucide="credit-card"></i></span>
+        <span>Withdrawals</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#orders">
+        <span><i data-lucide="shopping-cart"></i></span>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#notifications">
+        <span><i data-lucide="bell"></i></span>
+        <span>Notifications</span>
+        <span class="notification-badge">3</span>
+      </a>
+
+      <a class="nav-item" href="profile.html">
+        <span><i data-lucide="user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#faq">
+        <span><i data-lucide="circle-help"></i></span>
+        <span>FAQ</span>
+      </a>
+
+      <a class="nav-item" href="dashboard.html#support">
+        <span><i data-lucide="life-buoy"></i></span>
+        <span>Support</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <button
+        class="nav-item signout-button"
+        type="button"
+        onclick="signOut()"
+      >
+        <span><i data-lucide="log-out"></i></span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <main class="main-content">
   <div class="dashboard-content">
       <!-- =================================================
            WITHDRAWALS
@@ -667,7 +758,7 @@ html[data-theme="dark"] #withdrawals select {
           <div class="stat-card">
 
             <div class="stat-icon orange">
-              ⏳
+              <i data-lucide="clock-3"></i>
             </div>
 
             <div>

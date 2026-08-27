@@ -26,7 +26,7 @@
 
     return new Intl.NumberFormat("en-DE", {
       style: "currency",
-      currency: "EUR"
+      currency: "USD"
     }).format(Number(value) || 0);
 
   }

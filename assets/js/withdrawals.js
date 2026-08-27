@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Number(settings.minimum_withdrawal || minimumWithdrawal);
 
       currencySymbol =
-        settings.currency === "USD" ? "$" : "€";
+        settings.currency === "USD" ? "$" : "$";
 
     } catch (error) {
       console.error("Finance settings error:", error);
@@ -59,7 +59,7 @@ async function loadPlatformSettings(){
     const settings = data.settings || {};
 
     currencySymbol =
-      settings.currency === "USD" ? "$" : "€";
+      settings.currency === "USD" ? "$" : "$";
 
     minimumWithdrawal =
       Number(settings.minimum_withdrawal || 5);

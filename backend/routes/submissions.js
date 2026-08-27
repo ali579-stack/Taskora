@@ -443,7 +443,7 @@ router.patch(
         [
           submission.worker_id,
           "Task Reward Approved",
-          `Your task reward of €${Number(
+          `Your task reward of \$${Number(
             submission.reward_amount
           ).toFixed(2)} has been approved.`
         ]

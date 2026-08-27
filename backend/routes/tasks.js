@@ -222,7 +222,7 @@ router.post(
         return res.status(400).json({
           success: false,
           message:
-            `Reward must be between €${minimumReward} and €${maximumReward}`
+            `Reward must be between \$${minimumReward} and \$${maximumReward}`
         });
 
       }

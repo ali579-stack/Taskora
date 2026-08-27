@@ -53,7 +53,7 @@
       "en-DE",
       {
         style: "currency",
-        currency: "EUR"
+        currency: "USD"
       }
     ).format(value);
 

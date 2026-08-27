@@ -64,7 +64,7 @@ router.post(
         return res.status(400).json({
           success: false,
           message:
-            `Minimum withdrawal is €${minimumWithdrawal.toFixed(2)}`
+            `Minimum withdrawal is \$${minimumWithdrawal.toFixed(2)}`
         });
       }
 
@@ -161,7 +161,7 @@ router.post(
         return res.status(400).json({
           success: false,
           message:
-            `Insufficient balance. Available: €${available.toFixed(2)}`
+            `Insufficient balance. Available: \$${available.toFixed(2)}`
         });
 
       }
@@ -223,7 +223,7 @@ router.post(
         [
           req.user.id,
           "Withdrawal Requested",
-          `Your withdrawal request for €${withdrawalAmount.toFixed(2)} is pending review.`
+          `Your withdrawal request for \$${withdrawalAmount.toFixed(2)} is pending review.`
         ]
       );
 
@@ -551,7 +551,7 @@ router.patch(
         `,
         [
           withdrawal.user_id,
-          `Your withdrawal of €${Number(
+          `Your withdrawal of \$${Number(
             withdrawal.amount
           ).toFixed(2)} has been completed.`
         ]
