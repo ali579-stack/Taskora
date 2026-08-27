@@ -506,29 +506,8 @@ html[data-theme="dark"] header.header .theme-toggle {
 <script src="../assets/js/auth.js"></script>
 <script>
 (async function () {
-  try {
-    const localUser = JSON.parse(
-      localStorage.getItem("taskora_user") ||
-      localStorage.getItem("user") ||
-      "{}"
-    );
-
-    let user = localUser;
-
-    try {
-      const response = await taskoraApi("/me", { method: "GET" });
-
-      if (response?.success && response.user) {
-        user = response.user;
-
-        localStorage.setItem(
-          "taskora_user",
-          JSON.stringify(response.user)
-        );
-      }
-    } catch (apiError) {
-      console.warn("Profile API unavailable, using local user:", apiError);
-    }
+  const setProfile = (user) => {
+    user = user || {};
 
     const name = user.name || "Worker";
     const email = user.email || "—";
@@ -542,27 +521,73 @@ html[data-theme="dark"] header.header .theme-toggle {
         })
       : "—";
 
-    const prettyRole = role
+    const prettyRole = String(role)
       .replace(/_/g, " ")
       .replace(/\b\w/g, c => c.toUpperCase());
 
-    const avatar = name.trim().charAt(0).toUpperCase() || "W";
+    const avatar = String(name).trim().charAt(0).toUpperCase() || "W";
 
-    document.getElementById("profileAvatar").textContent = avatar;
-    document.getElementById("profileName").textContent = name;
-    document.getElementById("profileFullName").textContent = name;
-    document.getElementById("profileEmail").textContent = email;
-    document.getElementById("profileRole").textContent = prettyRole + " Account";
-    document.getElementById("profileRoleValue").textContent = prettyRole;
+    const fields = {
+      profileAvatar: avatar,
+      profileName: name,
+      profileFullName: name,
+      profileEmail: email,
+      profileRole: prettyRole + " Account",
+      profileRoleValue: prettyRole,
+      profileJoined: created,
+      profileUserId: user.id ? "#" + user.id : "—"
+    };
 
-    const joined = document.getElementById("profileJoined");
-    if (joined) joined.textContent = created;
+    Object.entries(fields).forEach(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    });
+  };
 
-    const userId = document.getElementById("profileUserId");
-    if (userId) userId.textContent = user.id ? "#" + user.id : "—";
+  try {
+    let user = {};
 
+    for (const key of ["taskora_user", "user"]) {
+      try {
+        const stored = localStorage.getItem(key);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === "object") {
+            user = parsed;
+            break;
+          }
+        }
+      } catch (e) {
+        console.warn("Invalid stored user:", key, e);
+      }
+    }
+
+    if (typeof taskoraApi === "function") {
+      try {
+        const response = await taskoraApi("/me", {
+          method: "GET"
+        });
+
+        if (response?.success && response.user) {
+          user = response.user;
+
+          localStorage.setItem(
+            "taskora_user",
+            JSON.stringify(response.user)
+          );
+        }
+      } catch (apiError) {
+        console.warn(
+          "Profile API unavailable; using stored account.",
+          apiError
+        );
+      }
+    }
+
+    setProfile(user);
   } catch (error) {
     console.error("Profile loading error:", error);
+    setProfile({});
   }
 })();
 </script>
@@ -725,32 +750,7 @@ html[data-theme="dark"] header.header .theme-toggle {
 
 
 
-<script>
-(function () {
-  const sidebar = document.getElementById("sidebar");
-  const menuButton = document.getElementById("menuButton");
-  const sidebarClose = document.getElementById("sidebarClose");
-  const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-  function openSidebar() {
-    if (sidebar) sidebar.classList.add("open");
-    if (sidebarOverlay) sidebarOverlay.classList.add("active");
-  }
-
-  function closeSidebar() {
-    if (sidebar) sidebar.classList.remove("open");
-    if (sidebarOverlay) sidebarOverlay.classList.remove("active");
-  }
-
-  if (menuButton) menuButton.addEventListener("click", openSidebar);
-  if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
-  if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
-
-  document.querySelectorAll(".sidebar-nav .nav-item").forEach(function (item) {
-    item.addEventListener("click", closeSidebar);
-  });
-})();
-</script>
 
   <script src="../assets/js/sidebar.js"></script>
 </body>
