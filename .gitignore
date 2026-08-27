@@ -8,3 +8,10 @@ backend/node_modules/
 *.before-*
 nohup.out
 .env
+
+# Local backup copies
+*-backup
+*.broken-*
+*.linked-accounts-backup
+*.pre-lucide-*
+*.backup-*
