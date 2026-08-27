@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "seed": "node database/seed.js",
-    "seed:data": "node database/seed-data.js"
+    "seed:data": "node database/seed-data.js",
+    "db:migrate": "node database/migrate.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
