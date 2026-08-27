@@ -81,3 +81,69 @@ async function loginUser(email, password) {
 
   return data;
 }
+
+async function registerUser(name, email, password) {
+  const response = await fetch(
+    `${TASKORA_API_URL}/register`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data?.message || "Registration failed."
+    );
+  }
+
+  return data;
+}
+
+const registerForm = document.getElementById("registerForm");
+
+if (registerForm) {
+  registerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      await registerUser(name, email, password);
+
+      if (window.TaskoraPopup?.alert) {
+        TaskoraPopup.alert(
+          "Your account was created successfully. You can now sign in.",
+          "Account Created"
+        );
+      } else {
+        alert("Your account was created successfully. You can now sign in.");
+      }
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1200);
+
+    } catch (error) {
+      if (window.TaskoraPopup?.alert) {
+        TaskoraPopup.alert(
+          error.message || "Registration failed.",
+          "Registration Error"
+        );
+      } else {
+        alert(error.message || "Registration failed.");
+      }
+    }
+  });
+}
