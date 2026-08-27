@@ -85,3 +85,6 @@ async function taskoraApi(
 }
 /* TASKORA API GLOBAL */
 window.taskoraApi = taskoraApi;
+
+/* TASKORA SOCIAL LIMITS GLOBAL */
+window.TASKORA_SOCIAL_LIMITS = TASKORA_SOCIAL_LIMITS;
