@@ -172,20 +172,13 @@
     </section>
 
     <section class="profile-card" id="profile-linked-accounts">
-      <h2>Linked Social Accounts</h2>
+  <h2>Linked Social Accounts</h2>
+  <p class="muted">Connect your accounts. Each platform has its own available slots.</p>
 
-      <p class="muted">
-        Connect your accounts. Each platform has its own available slots.
-      </p>
+  <div id="socialSlotGroups"></div>
 
-      <div id="socialSlotGroups"></div>
-
-      <div
-        id="accountMessage"
-        class="muted"
-        style="margin-top:16px"
-      ></div>
-    </section>
+  <div id="accountMessage" class="muted" style="margin-top:16px"></div>
+</section>
 
   </main>
 
@@ -369,6 +362,190 @@
       });
     })();
   </script>
+
+
+<script>
+(() => {
+  const limits = {
+    instagram: 3,
+    tiktok: 3,
+    youtube: 2,
+    facebook: 2,
+    x: 2,
+    other: 2
+  };
+
+  const labels = {
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    youtube: "YouTube",
+    facebook: "Facebook",
+    x: "X",
+    other: "Other"
+  };
+
+  const storageKey = "taskora_linked_social_accounts";
+  const groups = document.getElementById("socialSlotGroups");
+  const message = document.getElementById("accountMessage");
+
+  function load() {
+    try {
+      const data = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      return data && typeof data === "object" ? data : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function save(data) {
+    localStorage.setItem(storageKey, JSON.stringify(data));
+  }
+
+  function render() {
+    const data = load();
+    groups.innerHTML = "";
+
+    Object.keys(limits).forEach(platform => {
+      const accounts = Array.isArray(data[platform]) ? data[platform] : [];
+
+      const group = document.createElement("div");
+      group.className = "social-group";
+
+      const head = document.createElement("div");
+      head.className = "social-group-head";
+
+      const title = document.createElement("h3");
+      title.textContent = labels[platform];
+
+      const count = document.createElement("span");
+      count.textContent = `${accounts.length}/${limits[platform]} used`;
+
+      head.append(title, count);
+      group.appendChild(head);
+
+      accounts.forEach((account, index) => {
+        const row = document.createElement("div");
+        row.className = "social-slot filled";
+
+        const info = document.createElement("div");
+
+        const strong = document.createElement("strong");
+        strong.textContent = account;
+
+        const small = document.createElement("span");
+        small.textContent = "Linked account";
+
+        info.append(strong, small);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "Remove";
+
+        remove.onclick = () => {
+          const current = load();
+          current[platform].splice(index, 1);
+          save(current);
+          render();
+        };
+
+        row.append(info, remove);
+        group.appendChild(row);
+      });
+
+      if (accounts.length < limits[platform]) {
+        const row = document.createElement("div");
+        row.className = "social-slot empty";
+
+        const info = document.createElement("div");
+
+        const strong = document.createElement("strong");
+        strong.textContent = "Add account";
+
+        const small = document.createElement("span");
+        small.textContent = `Available slot ${accounts.length + 1} of ${limits[platform]}`;
+
+        info.append(strong, small);
+
+        const add = document.createElement("button");
+        add.type = "button";
+        add.textContent = "Add";
+
+        add.onclick = () => {
+          const value = prompt(`Enter your ${labels[platform]} account:`);
+          if (!value || !value.trim()) return;
+
+          const current = load();
+          current[platform] = Array.isArray(current[platform])
+            ? current[platform]
+            : [];
+
+          if (current[platform].length >= limits[platform]) {
+            message.textContent = `${labels[platform]} has reached its limit.`;
+            return;
+          }
+
+          current[platform].push(value.trim());
+          save(current);
+          message.textContent = `${labels[platform]} account added.`;
+          render();
+        };
+
+        row.append(info, add);
+        group.appendChild(row);
+      }
+
+      groups.appendChild(group);
+    });
+  }
+
+  render();
+})();
+</script>
+
+
+<style>
+#themeToggle.theme-toggle-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+}
+
+#themeToggle {
+  transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+}
+</style>
+
+
+<script>
+(() => {
+  const toggle = document.getElementById("themeToggle");
+  if (!toggle || toggle.dataset.scrollHideReady) return;
+
+  toggle.dataset.scrollHideReady = "1";
+
+  let ticking = false;
+
+  function updateThemeButton() {
+    if (window.scrollY > 20) {
+      toggle.classList.add("theme-toggle-hidden");
+    } else {
+      toggle.classList.remove("theme-toggle-hidden");
+    }
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(updateThemeButton);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updateThemeButton();
+})();
+</script>
 
 </body>
 </html>

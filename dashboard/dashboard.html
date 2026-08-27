@@ -1841,6 +1841,51 @@ loadCompletedTasks();
 </script>
 
   <script src="../assets/js/sidebar.js"></script>
+
+<style>
+#themeToggle.theme-toggle-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+}
+
+#themeToggle {
+  transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+}
+</style>
+
+
+<script>
+(() => {
+  const toggle = document.getElementById("themeToggle");
+  if (!toggle || toggle.dataset.scrollHideReady) return;
+
+  toggle.dataset.scrollHideReady = "1";
+
+  let ticking = false;
+
+  function updateThemeButton() {
+    if (window.scrollY > 20) {
+      toggle.classList.add("theme-toggle-hidden");
+    } else {
+      toggle.classList.remove("theme-toggle-hidden");
+    }
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(updateThemeButton);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updateThemeButton();
+})();
+</script>
+
 </body>
 
 </html>
