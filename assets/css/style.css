@@ -1582,20 +1582,7 @@ html[data-theme="dark"] .auth-logo {
 }
 
 @media (max-width: 900px) {
-  .sidebar {
-    transform: translateX(-105%);
-  }
-
-  .sidebar.open,
-  .sidebar.active {
-    transform: translateX(0);
-  }
-
-  .sidebar-close {
-    display: block;
-  }
-
-  .main-content {
+.main-content {
     margin-left: 0;
   }
 
@@ -3914,3 +3901,134 @@ html[data-theme="dark"] #withdrawMethod option[value="crypto"] {
   color: #4ade80 !important;
 }
 
+/* =========================================================
+   TASKORA — NEW FAST SIDEBAR
+   One implementation only
+   ========================================================= */
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-width, 250px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  background: #0b1020;
+  color: #fff;
+  border-right: 1px solid rgba(255,255,255,.08);
+
+  transform: translateX(0);
+  visibility: visible;
+  opacity: 1;
+  transition: transform .2s ease, visibility .2s ease;
+}
+
+.sidebar-header {
+  min-height: 72px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 10px 12px;
+}
+
+.nav-item {
+  min-height: 44px;
+  margin: 3px 0;
+  padding: 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  color: #a7b1c7;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background .15s ease, color .15s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: #fff;
+  background: #242b55;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg,#6366f1,#7c3aed);
+}
+
+.sidebar-close {
+  display: none;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width, 250px);
+}
+
+.menu-button {
+  display: none;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: min(var(--sidebar-width, 250px), 85vw);
+    transform: translateX(-105%);
+    visibility: hidden;
+  }
+
+  .sidebar.open,
+  .sidebar.active {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1101;
+  }
+
+  .sidebar-close {
+    display: inline-flex;
+  }
+
+  .sidebar-overlay {
+    z-index: 999;
+  }
+
+  .sidebar-overlay.active,
+  .sidebar-overlay.show {
+    display: block;
+  }
+}
+
+/* ---------- RTL ---------- */
+
+[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+}
+
+@media (max-width: 900px) {
+  [dir="rtl"] .sidebar {
+    transform: translateX(105%);
+  }
+
+  [dir="rtl"] .sidebar.open,
+  [dir="rtl"] .sidebar.active {
+    transform: translateX(0);
+  }
+}
