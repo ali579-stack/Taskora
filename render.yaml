@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: taskora-backend
+    runtime: node
+    region: frankfurt
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: taskora-db
+          property: connectionString
+
+      - key: DATABASE_SSL
+        value: "true"
+
+      - key: JWT_SECRET
+        generateValue: true
+
+      - key: FRONTEND_URL
+        sync: false
+
+databases:
+  - name: taskora-db
+    region: frankfurt
+    plan: free
