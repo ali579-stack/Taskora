@@ -1534,106 +1534,104 @@ function escapeHtml(value) {
    SIDEBAR
 ====================================================== */
 
-const sidebar =
-  document.getElementById("sidebar");
+(function initSidebar() {
+  function setup() {
+    const sidebar = document.getElementById("sidebar");
+    const menuButton = document.getElementById("menuButton");
+    const sidebarClose = document.getElementById("sidebarClose");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-
-const menuButton =
-  document.getElementById("menuButton");
-
-
-const sidebarClose =
-  document.getElementById("sidebarClose");
-
-
-const sidebarOverlay =
-  document.getElementById("sidebarOverlay");
-
-
-function openSidebar() {
-
-  if (sidebar) {
-
-    sidebar.classList.add("open");
-
-  }
-
-
-  if (sidebarOverlay) {
-
-    sidebarOverlay.classList.add("active");
-
-  }
-
-}
-
-
-function closeSidebar() {
-
-  if (sidebar) {
-
-    sidebar.classList.remove("open");
-
-  }
-
-
-  if (sidebarOverlay) {
-
-    sidebarOverlay.classList.remove("active");
-
-  }
-
-}
-
-
-if (menuButton) {
-
-  menuButton.addEventListener(
-    "click",
-    openSidebar
-  );
-
-}
-
-
-if (sidebarClose) {
-
-  sidebarClose.addEventListener(
-    "click",
-    closeSidebar
-  );
-
-}
-
-
-if (sidebarOverlay) {
-
-  sidebarOverlay.addEventListener(
-    "click",
-    closeSidebar
-  );
-
-}
-
-
-document
-  .querySelectorAll(
-    ".sidebar-nav .nav-item"
-  )
-  .forEach(
-    function (item) {
-
-      item.addEventListener(
-        "click",
-        closeSidebar
-      );
-
+    if (!sidebar || !menuButton) {
+      console.warn("TASKORA: Sidebar elements not found.");
+      return;
     }
-  );
 
+    function openSidebar(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      sidebar.classList.add("open");
+      sidebar.classList.add("active");
+
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.add("active");
+        sidebarOverlay.classList.add("show");
+      }
+
+      document.body.classList.add("sidebar-open");
+    }
+
+    function closeSidebar(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      sidebar.classList.remove("open");
+      sidebar.classList.remove("active");
+
+      if (sidebarOverlay) {
+        sidebarOverlay.classList.remove("active");
+        sidebarOverlay.classList.remove("show");
+      }
+
+      document.body.classList.remove("sidebar-open");
+    }
+
+    menuButton.addEventListener("click", openSidebar);
+    menuButton.addEventListener("touchend", function (event) {
+      event.preventDefault();
+      openSidebar(event);
+    }, { passive: false });
+
+    if (sidebarClose) {
+      sidebarClose.addEventListener("click", closeSidebar);
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", closeSidebar);
+      sidebarOverlay.addEventListener("touchend", function (event) {
+        event.preventDefault();
+        closeSidebar(event);
+      }, { passive: false });
+    }
+
+    sidebar.querySelectorAll(".sidebar-nav .nav-item").forEach(function (item) {
+      item.addEventListener("click", function () {
+        if (window.innerWidth <= 900) {
+          closeSidebar();
+        }
+      });
+    });
+
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 900) {
+        closeSidebar();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeSidebar();
+      }
+    });
+
+    console.log("TASKORA: Responsive sidebar initialized.");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
+})();
 
 /* =====================================================
    SECTION NAVIGATION
+
+
 ====================================================== */
 
 (function initSectionNavigation() {
